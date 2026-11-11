@@ -710,16 +710,16 @@
         <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
         <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0d071a"/>
         <g clip-path="url(#multiBarClip)">
-          <rect x="0.0" y="0" width="468.8" height="14" fill="#7aa2f7" opacity="0.95">
+          <rect x="0.0" y="0" width="469.6" height="14" fill="#7aa2f7" opacity="0.95">
         <title>TypeScript / JS: 43.0% (34 repos)</title>
       </rect>
-          <rect x="468.8" y="0" width="320.9" height="14" fill="#ff9e64" opacity="0.95">
+          <rect x="469.6" y="0" width="320.5" height="14" fill="#ff9e64" opacity="0.95">
         <title>Java: 29.5% (26 repos)</title>
       </rect>
-          <rect x="789.7" y="0" width="195.6" height="14" fill="#e0af68" opacity="0.95">
+          <rect x="790.1" y="0" width="195.4" height="14" fill="#e0af68" opacity="0.95">
         <title>Python: 18.0% (23 repos)</title>
       </rect>
-          <rect x="985.3" y="0" width="62.7" height="14" fill="#bb9af7" opacity="0.95">
+          <rect x="985.5" y="0" width="62.7" height="14" fill="#bb9af7" opacity="0.95">
         <title>PHP: 5.8% (4 repos)</title>
       </rect>
           <rect x="1048.1" y="0" width="39.9" height="14" fill="#bb9af7" opacity="0.95">
@@ -742,7 +742,7 @@
           <text x="18" y="64" class="lang-name">TypeScript / JS</text>
           <text x="18" y="86" class="lang-meta">34 repos &#183; 3 PR repo</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
-          <rect x="18" y="102" width="72" height="6" rx="3" fill="#7aa2f7"/>
+          <rect x="18" y="102" width="73" height="6" rx="3" fill="#7aa2f7"/>
         </g>
 
         <g transform="translate(221, 0)">
@@ -756,7 +756,7 @@
           <text x="18" y="64" class="lang-name">Java</text>
           <text x="18" y="86" class="lang-meta">26 repos &#183; 1 PR repo</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
-          <rect x="18" y="102" width="50" height="6" rx="3" fill="#ff9e64"/>
+          <rect x="18" y="102" width="49" height="6" rx="3" fill="#ff9e64"/>
         </g>
 
         <g transform="translate(442, 0)">
