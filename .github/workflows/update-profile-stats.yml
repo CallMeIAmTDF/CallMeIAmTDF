@@ -28,24 +28,21 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate Deep Language & PR Telemetry SVG
+      - name: Generate Unified Sunset Profile & Telemetry SVG
         env:
           GITHUB_USERNAME: ${{ github.repository_owner }}
-          # Use STATS_TOKEN (PAT with repo & read:user scopes) for full Private Repo + External PR aggregation.
-          # Falls back automatically to GITHUB_TOKEN if STATS_TOKEN is not configured yet.
           GH_TOKEN: ${{ secrets.STATS_TOKEN || secrets.GITHUB_TOKEN }}
           INCLUDE_FORKS: 'true'
         run: node scripts/update-stats.js
 
-      - name: Commit & Push updated SVG card
+      - name: Commit & Push updated SVG canvas
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/languages-sunset.svg
+          git add assets/profile-master.svg assets/languages-sunset.svg
           if git diff --staged --quiet; then
             echo "No telemetry changes detected."
           else
-            git commit -m "chore(telemetry): update multi-source language spectrum [skip ci]"
+            git commit -m "chore(telemetry): update unified sunset profile canvas [skip ci]"
             git push
           fi
-
