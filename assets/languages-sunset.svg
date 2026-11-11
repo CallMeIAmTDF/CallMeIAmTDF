@@ -706,16 +706,16 @@
         <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
         <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0d071a"/>
         <g clip-path="url(#multiBarClip)">
-          <rect x="0.0" y="0" width="304.6" height="14" fill="#ff9e64" opacity="0.95">
+          <rect x="0.0" y="0" width="306.1" height="14" fill="#ff9e64" opacity="0.95">
         <title>Java: 28.0% (26 repos)</title>
       </rect>
-          <rect x="304.6" y="0" width="299.2" height="14" fill="#f7768e" opacity="0.95">
+          <rect x="306.1" y="0" width="298.8" height="14" fill="#f7768e" opacity="0.95">
         <title>JavaScript: 27.5% (33 repos)</title>
       </rect>
-          <rect x="603.8" y="0" width="237.2" height="14" fill="#7aa2f7" opacity="0.95">
+          <rect x="604.9" y="0" width="236.7" height="14" fill="#7aa2f7" opacity="0.95">
         <title>TypeScript: 21.8% (14 repos)</title>
       </rect>
-          <rect x="841.0" y="0" width="187.1" height="14" fill="#e0af68" opacity="0.95">
+          <rect x="841.6" y="0" width="186.6" height="14" fill="#e0af68" opacity="0.95">
         <title>Python: 17.2% (23 repos)</title>
       </rect>
           <rect x="1028.2" y="0" width="59.8" height="14" fill="#bb9af7" opacity="0.95">
