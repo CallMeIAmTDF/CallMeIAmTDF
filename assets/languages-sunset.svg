@@ -710,20 +710,20 @@
         <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
         <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0d071a"/>
         <g clip-path="url(#multiBarClip)">
-          <rect x="0.0" y="0" width="418.0" height="14" fill="#7aa2f7" opacity="0.95">
-        <title>TypeScript / JS: 38.4% (42 repos)</title>
+          <rect x="0.0" y="0" width="468.8" height="14" fill="#7aa2f7" opacity="0.95">
+        <title>TypeScript / JS: 43.0% (34 repos)</title>
       </rect>
-          <rect x="418.0" y="0" width="320.7" height="14" fill="#ff9e64" opacity="0.95">
+          <rect x="468.8" y="0" width="320.9" height="14" fill="#ff9e64" opacity="0.95">
         <title>Java: 29.5% (26 repos)</title>
       </rect>
-          <rect x="738.7" y="0" width="223.3" height="14" fill="#e0af68" opacity="0.95">
-        <title>Python: 20.5% (23 repos)</title>
+          <rect x="789.7" y="0" width="195.6" height="14" fill="#e0af68" opacity="0.95">
+        <title>Python: 18.0% (23 repos)</title>
       </rect>
-          <rect x="962.0" y="0" width="71.0" height="14" fill="#bb9af7" opacity="0.95">
-        <title>PHP: 6.5% (4 repos)</title>
+          <rect x="985.3" y="0" width="62.7" height="14" fill="#bb9af7" opacity="0.95">
+        <title>PHP: 5.8% (4 repos)</title>
       </rect>
-          <rect x="1033.0" y="0" width="55.0" height="14" fill="#7dcfff" opacity="0.95">
-        <title>Go: 5.1% (3 repos)</title>
+          <rect x="1048.1" y="0" width="39.9" height="14" fill="#bb9af7" opacity="0.95">
+        <title>Kotlin: 3.7% (3 repos)</title>
       </rect>
         </g>
       </g>
@@ -737,12 +737,12 @@
             <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#7aa2f7" opacity="0.3"/>
             <circle cx="6" cy="-4" r="3.5" fill="#7aa2f7"/>
             <text x="20" y="0" class="rank-lbl">RANK #01</text>
-            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#7aa2f7">38.4%</text>
+            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#7aa2f7">43.0%</text>
           </g>
           <text x="18" y="64" class="lang-name">TypeScript / JS</text>
-          <text x="18" y="86" class="lang-meta">42 repos &#183; 3 PR repo</text>
+          <text x="18" y="86" class="lang-meta">34 repos &#183; 3 PR repo</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
-          <rect x="18" y="102" width="65" height="6" rx="3" fill="#7aa2f7"/>
+          <rect x="18" y="102" width="72" height="6" rx="3" fill="#7aa2f7"/>
         </g>
 
         <g transform="translate(221, 0)">
@@ -765,12 +765,12 @@
             <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#e0af68" opacity="0.3"/>
             <circle cx="6" cy="-4" r="3.5" fill="#e0af68"/>
             <text x="20" y="0" class="rank-lbl">RANK #03</text>
-            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#e0af68">20.5%</text>
+            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#e0af68">18.0%</text>
           </g>
           <text x="18" y="64" class="lang-name">Python</text>
           <text x="18" y="86" class="lang-meta">23 repositories</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
-          <rect x="18" y="102" width="34" height="6" rx="3" fill="#e0af68"/>
+          <rect x="18" y="102" width="30" height="6" rx="3" fill="#e0af68"/>
         </g>
 
         <g transform="translate(663, 0)">
@@ -779,7 +779,7 @@
             <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#bb9af7" opacity="0.3"/>
             <circle cx="6" cy="-4" r="3.5" fill="#bb9af7"/>
             <text x="20" y="0" class="rank-lbl">RANK #04</text>
-            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#bb9af7">6.5%</text>
+            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#bb9af7">5.8%</text>
           </g>
           <text x="18" y="64" class="lang-name">PHP</text>
           <text x="18" y="86" class="lang-meta">4 repos &#183; 1 PR repo</text>
@@ -788,17 +788,17 @@
         </g>
 
         <g transform="translate(884, 0)">
-          <rect x="0" y="0" width="204" height="126" rx="14" fill="#1b1030" fill-opacity="0.88" stroke="#7dcfff" stroke-opacity="0.4" stroke-width="1.2"/>
+          <rect x="0" y="0" width="204" height="126" rx="14" fill="#1b1030" fill-opacity="0.88" stroke="#bb9af7" stroke-opacity="0.4" stroke-width="1.2"/>
           <g transform="translate(18, 24)">
-            <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#7dcfff" opacity="0.3"/>
-            <circle cx="6" cy="-4" r="3.5" fill="#7dcfff"/>
+            <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#bb9af7" opacity="0.3"/>
+            <circle cx="6" cy="-4" r="3.5" fill="#bb9af7"/>
             <text x="20" y="0" class="rank-lbl">RANK #05</text>
-            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#7dcfff">5.1%</text>
+            <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#bb9af7">3.7%</text>
           </g>
-          <text x="18" y="64" class="lang-name">Go</text>
+          <text x="18" y="64" class="lang-name">Kotlin</text>
           <text x="18" y="86" class="lang-meta">3 repositories</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
-          <rect x="18" y="102" width="14" height="6" rx="3" fill="#7dcfff"/>
+          <rect x="18" y="102" width="14" height="6" rx="3" fill="#bb9af7"/>
         </g>
       </g>
     </g>
