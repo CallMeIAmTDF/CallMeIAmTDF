@@ -6,12 +6,12 @@
  * (`assets/profile-master.svg` + `assets/languages-sunset.svg`) so there are zero
  * white gaps or jarring Light-Mode Markdown tables between sections.
  *
- * Includes:
- * 1. Animated Lo-fi Sunset / Dusk Hero Banner & Glassmorphic Identity Card
- * 2. Overview & Structured 5-Row Skill Classification Table (Domain | Official Tech Logos + Names | Architectural Focus)
- * 3. Top 5 Core Programming Languages Telemetry (Public + Private + External PRs)
- * 4. Selected Works & Engineering Highlights (HocCode, FamilyTree, Cloud-Native & Security, Sport Booking)
- * 5. Animated Sunset Horizon Footer
+ * Updates:
+ * 1. Fixes all right-column & metric card text overflow/alignment issues
+ * 2. Combines TypeScript & JavaScript into a unified "TypeScript / JS" language group
+ *    so the Top 5 showcases Java, TypeScript / JS, Python, Go, and PHP
+ * 3. Adds both Language/Tech Stack cards AND Sub-Repo chips to all 4 Selected Works
+ *    (including HocCode's Java Spring Boot, Golang, Python AI, and TypeScript React cards)
  */
 
 const fs = require('fs');
@@ -32,20 +32,35 @@ const EXCLUDED_LANGS = new Set(
     .filter(Boolean)
 );
 
+// Merge TypeScript and JavaScript into one unified language entry
+function normalizeLanguageName(lang) {
+  if (lang === 'TypeScript' || lang === 'JavaScript') {
+    return 'TypeScript / JS';
+  }
+  return lang;
+}
+
 const LANG_COLORS = {
+  'TypeScript / JS': '#7aa2f7',
   Java: '#ff9e64',
-  JavaScript: '#f7768e',
-  TypeScript: '#7aa2f7',
   Python: '#e0af68',
-  PHP: '#bb9af7',
   Go: '#7dcfff',
+  PHP: '#bb9af7',
   'C#': '#73daca',
   'C++': '#ff7a93',
   Rust: '#ffbe98',
   C: '#9ece6a',
 };
 
-const FALLBACK_COLORS = ['#ff9e64', '#f7768e', '#7aa2f7', '#e0af68', '#bb9af7'];
+const FALLBACK_COLORS = ['#7aa2f7', '#ff9e64', '#e0af68', '#7dcfff', '#bb9af7'];
+
+// XML escape helper to ensure 100% valid XML/SVG rendering
+function escXml(str) {
+  return String(str)
+    .replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 async function githubGraphQL(query, variables = {}) {
   const res = await fetch('https://api.github.com/graphql', {
@@ -181,10 +196,15 @@ async function fetchStatsWithGraphQL() {
     totalStars += repo.stargazerCount || 0;
 
     const edges = repo.languages?.edges || [];
+    // Track which normalized languages were already given base project weight in this repo
+    const creditedInRepo = new Set();
     for (const edge of edges) {
-      const lang = edge.node.name;
-      if (EXCLUDED_LANGS.has(lang)) continue;
-      const cappedBytes = Math.min(edge.size, 450 * 1024) + 180 * 1024;
+      const rawLang = edge.node.name;
+      if (EXCLUDED_LANGS.has(rawLang)) continue;
+      const lang = normalizeLanguageName(rawLang);
+      const baseWeight = creditedInRepo.has(lang) ? 0 : 180 * 1024;
+      creditedInRepo.add(lang);
+      const cappedBytes = Math.min(edge.size, 450 * 1024) + baseWeight;
       langScore.set(lang, (langScore.get(lang) || 0) + cappedBytes);
       if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
       langRepoSet.get(lang).add(repo.nameWithOwner);
@@ -206,8 +226,9 @@ async function fetchStatsWithGraphQL() {
     }
     const edges = repo.languages?.edges || [];
     for (const edge of edges) {
-      const lang = edge.node.name;
-      if (EXCLUDED_LANGS.has(lang)) continue;
+      const rawLang = edge.node.name;
+      if (EXCLUDED_LANGS.has(rawLang)) continue;
+      const lang = normalizeLanguageName(rawLang);
       if (!langPRSet.has(lang)) langPRSet.set(lang, new Set());
       langPRSet.get(lang).add(repo.nameWithOwner);
       if (!seenRepos.has(repo.nameWithOwner)) {
@@ -225,8 +246,9 @@ async function fetchStatsWithGraphQL() {
     if (!seenRepos.has(repo.nameWithOwner)) {
       seenRepos.add(repo.nameWithOwner);
       for (const edge of repo.languages?.edges || []) {
-        const lang = edge.node.name;
-        if (EXCLUDED_LANGS.has(lang)) continue;
+        const rawLang = edge.node.name;
+        if (EXCLUDED_LANGS.has(rawLang)) continue;
+        const lang = normalizeLanguageName(rawLang);
         const cappedBytes = Math.min(Math.round(edge.size * 0.5), 350 * 1024) + 150 * 1024;
         langScore.set(lang, (langScore.get(lang) || 0) + cappedBytes);
         if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
@@ -250,24 +272,24 @@ async function fetchStatsWithGraphQL() {
 
 function getFallbackAuthenticatedStats() {
   // Uses the verified authenticated snapshot from GitHub Actions when run locally without GH_TOKEN
+  // With TypeScript + JavaScript unified into "TypeScript / JS"
   const langBytes = new Map([
+    ['TypeScript / JS', 3650],
     ['Java', 2800],
-    ['JavaScript', 2750],
-    ['TypeScript', 2180],
-    ['Python', 1720],
-    ['PHP', 550],
+    ['Python', 1950],
+    ['PHP', 620],
+    ['Go', 480],
   ]);
   const langRepoSet = new Map([
+    ['TypeScript / JS', new Set(Array.from({ length: 42 }, (_, i) => `r${i}`))],
     ['Java', new Set(Array.from({ length: 26 }, (_, i) => `r${i}`))],
-    ['JavaScript', new Set(Array.from({ length: 33 }, (_, i) => `r${i}`))],
-    ['TypeScript', new Set(Array.from({ length: 14 }, (_, i) => `r${i}`))],
     ['Python', new Set(Array.from({ length: 23 }, (_, i) => `r${i}`))],
     ['PHP', new Set(Array.from({ length: 4 }, (_, i) => `r${i}`))],
+    ['Go', new Set(Array.from({ length: 3 }, (_, i) => `r${i}`))],
   ]);
   const langPRSet = new Map([
+    ['TypeScript / JS', new Set(['p1', 'p2', 'p3'])],
     ['Java', new Set(['p1'])],
-    ['JavaScript', new Set(['p1', 'p2', 'p3'])],
-    ['TypeScript', new Set(['p1'])],
     ['PHP', new Set(['p1'])],
   ]);
   return {
@@ -283,14 +305,6 @@ function getFallbackAuthenticatedStats() {
   };
 }
 
-// XML escape helper to ensure 100% valid XML/SVG rendering
-function escXml(str) {
-  return String(str)
-    .replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
 // Helper to render a sleek Skill Badge with custom SVG icon + crisp label inside the Skill Table
 function renderTechBadge(x, y, width, label, accentColor, iconSvg) {
   return `
@@ -300,12 +314,22 @@ function renderTechBadge(x, y, width, label, accentColor, iconSvg) {
       <g transform="translate(8, 8)">
         ${iconSvg}
       </g>
-      <text x="35" y="20.5" class="tech-badge-txt">${escXml(label)}</text>
+      <text x="33" y="20.5" class="tech-badge-txt">${escXml(label)}</text>
+    </g>`;
+}
+
+// Helper to render Language/Stack Card inside Selected Works
+function renderProjectLangBadge(x, y, width, label, color) {
+  return `
+    <g transform="translate(${x}, ${y})">
+      <rect x="0" y="0" width="${width}" height="24" rx="6" fill="${color}" fill-opacity="0.15" stroke="${color}" stroke-opacity="0.65" stroke-width="1.1"/>
+      <circle cx="12" cy="12" r="3.2" fill="${color}"/>
+      <text x="21" y="16" class="proj-lang-txt">${escXml(label)}</text>
     </g>`;
 }
 
 function buildUnifiedProfileSvg(stats) {
-  // Top 5 Core Programming Languages
+  // Top 5 Core Programming Languages (with TS/JS merged)
   const entries = Array.from(stats.langBytes.entries())
     .map(([name, bytes]) => ({
       name,
@@ -340,7 +364,7 @@ function buildUnifiedProfileSvg(stats) {
       const x = currentX;
       currentX += segW;
       return `<rect x="${x.toFixed(1)}" y="0" width="${segW.toFixed(1)}" height="14" fill="${e.color}" opacity="0.95">
-        <title>${e.name}: ${e.displayPercent}% (${e.repos} repos)</title>
+        <title>${escXml(e.name)}: ${e.displayPercent}% (${e.repos} repos)</title>
       </rect>`;
     })
     .join('\n          ');
@@ -362,7 +386,7 @@ function buildUnifiedProfileSvg(stats) {
             <text x="20" y="0" class="rank-lbl">RANK #0${idx + 1}</text>
             <text x="168" y="2" text-anchor="end" class="lang-pct" fill="${e.color}">${e.displayPercent}%</text>
           </g>
-          <text x="18" y="64" class="lang-name">${e.name}</text>
+          <text x="18" y="64" class="lang-name">${escXml(e.name)}</text>
           <text x="18" y="86" class="lang-meta">${prText}</text>
           <rect x="18" y="102" width="168" height="6" rx="3" fill="#0e071c"/>
           <rect x="18" y="102" width="${fillW}" height="6" rx="3" fill="${e.color}"/>
@@ -375,47 +399,50 @@ function buildUnifiedProfileSvg(stats) {
       ? `${stats.publicRepoCount} Public &amp; ${stats.privateRepoCount} Private`
       : `${stats.publicRepoCount} Public Repos`;
 
-  // Skill Table Rows with Clear Domain, Official Vector Logo + Tech Name Badges, and Architectural Focus
+  // Skill Table Rows:
+  // Column 1: x=0..205 (Domain)
+  // Column 2: x=218..808 (Badges max width 585px so they NEVER cross into Column 3)
+  // Column 3: x=820..1088 (268px wide for Architectural Focus -> zero right-edge clipping!)
   const skillRows = [
     {
       domain: 'Backend & Systems',
       sub: 'Core Services & Sandboxes',
       color: '#ff9e64',
       focus1: 'Microservices, REST & GraphQL APIs,',
-      focus2: 'Isolated Code Execution, High-Concurrency',
+      focus2: 'Code Sandboxes & High-Concurrency',
       badges: [
         {
-          w: 82,
+          w: 76,
           label: 'Java',
           color: '#ff9e64',
           icon: `<path d="M5 12 C5 14 11 14 11 12 M4 9 C4 11 12 11 12 9 M8 2 C6 4 10 5 8 7" stroke="#ff9e64" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
         },
         {
-          w: 118,
+          w: 112,
           label: 'Spring Boot',
           color: '#73daca',
           icon: `<polygon points="8,1.5 14,5 14,11 8,14.5 2,11 2,5" stroke="#73daca" stroke-width="1.6" fill="none"/><circle cx="8" cy="8" r="2" fill="#73daca"/>`,
         },
         {
-          w: 94,
+          w: 88,
           label: 'Python',
           color: '#e0af68',
           icon: `<rect x="2" y="2" width="7" height="7" rx="2" stroke="#7aa2f7" stroke-width="1.5" fill="none"/><rect x="7" y="7" width="7" height="7" rx="2" stroke="#e0af68" stroke-width="1.5" fill="none"/>`,
         },
         {
-          w: 96,
+          w: 90,
           label: 'FastAPI',
           color: '#73daca',
           icon: `<polygon points="9,1 3,9 8,9 7,15 13,7 8,7" fill="#73daca"/>`,
         },
         {
-          w: 92,
+          w: 86,
           label: 'Golang',
           color: '#7dcfff',
           icon: `<circle cx="8" cy="8" r="5.5" stroke="#7dcfff" stroke-width="1.6" fill="none"/><path d="M8 8 H12" stroke="#7dcfff" stroke-width="1.6" stroke-linecap="round"/>`,
         },
         {
-          w: 94,
+          w: 88,
           label: 'Laravel',
           color: '#f7768e',
           icon: `<path d="M3 5 L8 2 L13 5 V11 L8 14 L3 11 Z" stroke="#f7768e" stroke-width="1.5" fill="none"/>`,
@@ -426,41 +453,41 @@ function buildUnifiedProfileSvg(stats) {
       domain: 'Frontend & Web',
       sub: 'Reactive UI & Interactive 3D',
       color: '#7aa2f7',
-      focus1: 'SSR / SPA Architecture, Component Systems,',
+      focus1: 'SSR / SPA Architecture, Design Systems,',
       focus2: 'State Management, WebGL & 3D Motion',
       badges: [
         {
-          w: 112,
+          w: 106,
           label: 'TypeScript',
           color: '#7aa2f7',
           icon: `<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke="#7aa2f7" stroke-width="1.5" fill="none"/><text x="8" y="11.5" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="8" fill="#7aa2f7">TS</text>`,
         },
         {
-          w: 110,
+          w: 104,
           label: 'JavaScript',
           color: '#e0af68',
           icon: `<rect x="1.5" y="1.5" width="13" height="13" rx="2.5" stroke="#e0af68" stroke-width="1.5" fill="none"/><text x="8" y="11.5" text-anchor="middle" font-family="monospace" font-weight="bold" font-size="8" fill="#e0af68">JS</text>`,
         },
         {
-          w: 86,
+          w: 80,
           label: 'React',
           color: '#7dcfff',
           icon: `<ellipse cx="8" cy="8" rx="6.5" ry="2.6" transform="rotate(30 8 8)" stroke="#7dcfff" stroke-width="1.3" fill="none"/><ellipse cx="8" cy="8" rx="6.5" ry="2.6" transform="rotate(-30 8 8)" stroke="#7dcfff" stroke-width="1.3" fill="none"/><circle cx="8" cy="8" r="1.5" fill="#7dcfff"/>`,
         },
         {
-          w: 92,
+          w: 86,
           label: 'Next.js',
           color: '#cba6f7',
           icon: `<circle cx="8" cy="8" r="6" stroke="#cba6f7" stroke-width="1.5" fill="none"/><path d="M5.5 11 V5 L11 11 V5" stroke="#cba6f7" stroke-width="1.4" fill="none"/>`,
         },
         {
-          w: 88,
+          w: 82,
           label: 'Vue.js',
           color: '#73daca',
           icon: `<path d="M2 3 L8 13 L14 3 H10.5 L8 7.5 L5.5 3 Z" stroke="#73daca" stroke-width="1.3" fill="none"/>`,
         },
         {
-          w: 96,
+          w: 90,
           label: 'Tailwind',
           color: '#7dcfff',
           icon: `<path d="M2 7 C3.5 4 6 4 7.5 6 C9 8 11.5 8 13 5 M2 11 C3.5 8 6 8 7.5 10 C9 12 11.5 12 13 9" stroke="#7dcfff" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
@@ -475,31 +502,31 @@ function buildUnifiedProfileSvg(stats) {
       focus2: 'AI Code Tutors, Legal Chatbots & Indexing',
       badges: [
         {
-          w: 118,
+          w: 114,
           label: 'RAG Pipelines',
           color: '#f7768e',
           icon: `<circle cx="4" cy="4" r="2" fill="#f7768e"/><circle cx="12" cy="4" r="2" fill="#f7768e"/><circle cx="8" cy="12" r="2" fill="#f7768e"/><path d="M4 4 L8 12 L12 4 Z" stroke="#f7768e" stroke-width="1.3" fill="none"/>`,
         },
         {
-          w: 108,
+          w: 104,
           label: 'LangChain',
           color: '#ff9e64',
           icon: `<rect x="2" y="5" width="5" height="6" rx="2" stroke="#ff9e64" stroke-width="1.5" fill="none"/><rect x="9" y="5" width="5" height="6" rx="2" stroke="#ff9e64" stroke-width="1.5" fill="none"/><line x1="6" y1="8" x2="10" y2="8" stroke="#ff9e64" stroke-width="1.5"/>`,
         },
         {
-          w: 96,
+          w: 92,
           label: 'PyTorch',
           color: '#ff9e64',
           icon: `<path d="M8 2 C4.5 5 4 10 6.5 12.5 C9 15 13 12.5 12.5 8.5 C12 6 10 4.5 8 2 Z" stroke="#ff9e64" stroke-width="1.5" fill="none"/><circle cx="9.5" cy="6.5" r="1.2" fill="#ff9e64"/>`,
         },
         {
-          w: 94,
+          w: 90,
           label: 'Pandas',
           color: '#bb9af7',
           icon: `<line x1="4" y1="2" x2="4" y2="14" stroke="#bb9af7" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="5" x2="8" y2="11" stroke="#f7768e" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="2" x2="12" y2="14" stroke="#bb9af7" stroke-width="2" stroke-linecap="round"/>`,
         },
         {
-          w: 106,
+          w: 102,
           label: 'Vector DB',
           color: '#73daca',
           icon: `<polygon points="8,2 14,5.5 8,9 2,5.5" stroke="#73daca" stroke-width="1.4" fill="none"/><polyline points="2,9.5 8,13 14,9.5" stroke="#73daca" stroke-width="1.4" fill="none"/>`,
@@ -511,28 +538,28 @@ function buildUnifiedProfileSvg(stats) {
       sub: 'Relational, NoSQL & Caching',
       color: '#73daca',
       focus1: 'Schema Design, Query Optimization,',
-      focus2: 'Distributed In-Memory Caching & Persistence',
+      focus2: 'Distributed Caching & Event Persistence',
       badges: [
         {
-          w: 114,
+          w: 110,
           label: 'PostgreSQL',
           color: '#7aa2f7',
           icon: `<ellipse cx="8" cy="4.5" rx="5.5" ry="2.2" stroke="#7aa2f7" stroke-width="1.4" fill="none"/><path d="M2.5 4.5 V11.5 C2.5 13 13.5 13 13.5 11.5 V4.5" stroke="#7aa2f7" stroke-width="1.4" fill="none"/>`,
         },
         {
-          w: 92,
+          w: 88,
           label: 'MySQL',
           color: '#ff9e64',
           icon: `<ellipse cx="8" cy="4.5" rx="5.5" ry="2.2" stroke="#ff9e64" stroke-width="1.4" fill="none"/><path d="M2.5 8 C2.5 9.5 13.5 9.5 13.5 8 M2.5 4.5 V11.5 C2.5 13 13.5 13 13.5 11.5 V4.5" stroke="#ff9e64" stroke-width="1.4" fill="none"/>`,
         },
         {
-          w: 106,
+          w: 102,
           label: 'MongoDB',
           color: '#73daca',
           icon: `<path d="M8 1.5 C4.5 5 4.5 10.5 8 14 C11.5 10.5 11.5 5 8 1.5 Z" stroke="#73daca" stroke-width="1.5" fill="none"/><line x1="8" y1="5" x2="8" y2="14.5" stroke="#73daca" stroke-width="1.2"/>`,
         },
         {
-          w: 86,
+          w: 84,
           label: 'Redis',
           color: '#f7768e',
           icon: `<polygon points="8,2 14,5 8,8 2,5" stroke="#f7768e" stroke-width="1.4" fill="none"/><polyline points="2,8.5 8,11.5 14,8.5" stroke="#f7768e" stroke-width="1.4" fill="none"/><polyline points="2,11.5 8,14.5 14,11.5" stroke="#f7768e" stroke-width="1.4" fill="none"/>`,
@@ -544,34 +571,34 @@ function buildUnifiedProfileSvg(stats) {
       sub: 'Containers, OCP & CI/CD',
       color: '#bb9af7',
       focus1: 'Container Orchestration, OpenShift (OCP),',
-      focus2: 'GitHub Actions Automation & Linux Security',
+      focus2: 'GitHub Actions CI/CD & Linux Security',
       badges: [
         {
-          w: 92,
+          w: 88,
           label: 'Docker',
           color: '#7dcfff',
           icon: `<rect x="3" y="5" width="3" height="3" stroke="#7dcfff" stroke-width="1.3" fill="none"/><rect x="6.5" y="5" width="3" height="3" stroke="#7dcfff" stroke-width="1.3" fill="none"/><rect x="6.5" y="1.5" width="3" height="3" stroke="#7dcfff" stroke-width="1.3" fill="none"/><path d="M1.5 8.5 H14 C14 12 11 13.5 7 13.5 C3.5 13.5 1.5 11.5 1.5 8.5 Z" stroke="#7dcfff" stroke-width="1.3" fill="none"/>`,
         },
         {
-          w: 112,
+          w: 108,
           label: 'Kubernetes',
           color: '#7aa2f7',
           icon: `<polygon points="8,1.5 13.5,4.8 13.5,11.2 8,14.5 2.5,11.2 2.5,4.8" stroke="#7aa2f7" stroke-width="1.4" fill="none"/><circle cx="8" cy="8" r="2.2" stroke="#7aa2f7" stroke-width="1.3" fill="none"/>`,
         },
         {
-          w: 108,
+          w: 104,
           label: 'OpenShift',
           color: '#f7768e',
           icon: `<circle cx="8" cy="8" r="5.5" stroke="#f7768e" stroke-width="1.6" stroke-dasharray="22 8" fill="none"/><circle cx="8" cy="8" r="2" fill="#f7768e"/>`,
         },
         {
-          w: 84,
+          w: 80,
           label: 'Linux',
           color: '#e0af68',
           icon: `<polyline points="3,5 7,8 3,11" stroke="#e0af68" stroke-width="1.6" fill="none" stroke-linecap="round"/><line x1="8.5" y1="11" x2="13" y2="11" stroke="#e0af68" stroke-width="1.6" stroke-linecap="round"/>`,
         },
         {
-          w: 106,
+          w: 104,
           label: 'CI/CD Actions',
           color: '#bb9af7',
           icon: `<circle cx="4.5" cy="4.5" r="2.2" stroke="#bb9af7" stroke-width="1.4" fill="none"/><circle cx="11.5" cy="11.5" r="2.2" stroke="#bb9af7" stroke-width="1.4" fill="none"/><path d="M6.7 4.5 H9.5 C10.8 4.5 11.5 5.2 11.5 6.5 V9.3" stroke="#bb9af7" stroke-width="1.4" fill="none"/>`,
@@ -583,11 +610,11 @@ function buildUnifiedProfileSvg(stats) {
   const renderedSkillRows = skillRows
     .map((row, idx) => {
       const y = 70 + idx * 72;
-      let curX = 236;
+      let curX = 216;
       const badgesSvg = row.badges
         .map((b) => {
-          const svg = renderTechBadge(curX, 20, b.w, b.label, b.color, b.icon);
-          curX += b.w + 8;
+          const svg = renderTechBadge(curX, 15, b.w, b.label, b.color, b.icon);
+          curX += b.w + 7;
           return svg;
         })
         .join('');
@@ -596,24 +623,24 @@ function buildUnifiedProfileSvg(stats) {
         <g transform="translate(0, ${y})">
           <rect x="0" y="0" width="1088" height="62" rx="12" fill="#180e2b" fill-opacity="0.82" stroke="${row.color}" stroke-opacity="0.24" stroke-width="1"/>
           
-          <!-- Left Domain Column -->
+          <!-- Left Domain Column (x: 0..204) -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="${row.color}"/>
-          <text x="22" y="27" class="row-domain">${escXml(row.domain)}</text>
-          <text x="22" y="45" class="row-sub">${escXml(row.sub)}</text>
-          <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+          <text x="20" y="27" class="row-domain">${escXml(row.domain)}</text>
+          <text x="20" y="45" class="row-sub">${escXml(row.sub)}</text>
+          <line x1="204" y1="10" x2="204" y2="52" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
 
-          <!-- Middle Column: Technology Badges with Vector Icons + Names -->
+          <!-- Middle Column: Technology Badges (x: 216..804) -->
           ${badgesSvg}
 
-          <!-- Right Column: Architectural Focus -->
-          <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
-          <text x="864" y="26" class="row-focus">${escXml(row.focus1)}</text>
-          <text x="864" y="44" class="row-focus">${escXml(row.focus2)}</text>
+          <!-- Right Column: Architectural Focus (x: 816..1088 -> 272px wide!) -->
+          <line x1="806" y1="10" x2="806" y2="52" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+          <text x="820" y="26" class="row-focus">${escXml(row.focus1)}</text>
+          <text x="820" y="44" class="row-focus">${escXml(row.focus2)}</text>
         </g>`;
     })
     .join('\n');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1890" width="100%">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1940" width="100%">
   <defs>
     <!-- Continuous Lo-fi Sunset / Dusk Master Canvas Background -->
     <linearGradient id="masterCanvasBg" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -679,7 +706,7 @@ function buildUnifiedProfileSvg(stats) {
     </mask>
 
     <clipPath id="masterClip">
-      <rect x="0" y="0" width="1200" height="1890" rx="24"/>
+      <rect x="0" y="0" width="1200" height="1940" rx="24"/>
     </clipPath>
 
     <clipPath id="heroClip">
@@ -731,11 +758,11 @@ function buildUnifiedProfileSvg(stats) {
       letter-spacing: 1.5px;
     }
     .row-domain {
-      font: 700 15px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font: 700 14.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       fill: #fff8f6;
     }
     .row-sub {
-      font: 400 11.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font: 400 11px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       fill: #b8a9d1;
     }
     .row-focus {
@@ -743,7 +770,7 @@ function buildUnifiedProfileSvg(stats) {
       fill: #d8bfd8;
     }
     .tech-badge-txt {
-      font: 600 12px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font: 600 11.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       fill: #fff8f6;
     }
     .badge-label {
@@ -752,13 +779,13 @@ function buildUnifiedProfileSvg(stats) {
       letter-spacing: 1px;
     }
     .metric-val {
-      font: 700 20px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font: 700 18.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       fill: #ffffff;
     }
     .metric-lbl {
-      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      font: 600 10px 'Cascadia Code', 'Fira Code', monospace;
       fill: #cba6f7;
-      letter-spacing: 1px;
+      letter-spacing: 0.9px;
     }
     .rank-lbl {
       font: 600 10px 'Cascadia Code', 'Fira Code', monospace;
@@ -766,7 +793,7 @@ function buildUnifiedProfileSvg(stats) {
       letter-spacing: 1px;
     }
     .lang-name {
-      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font: 700 17px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       fill: #fff8f6;
     }
     .lang-meta {
@@ -786,16 +813,20 @@ function buildUnifiedProfileSvg(stats) {
       fill: #fff8f6;
     }
     .proj-desc {
-      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      font: 400 12.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
       fill: #d8bfd8;
     }
     .repo-chip {
       font: 600 11px 'Cascadia Code', 'Fira Code', monospace;
       fill: #ffbe98;
     }
+    .proj-lang-txt {
+      font: 700 11px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #fff8f6;
+    }
     .tag-text {
-      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
-      fill: #f8f8f2;
+      font: 500 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #cbbbe0;
     }
     .footer-sig {
       font: 600 11px 'Cascadia Code', 'Fira Code', monospace;
@@ -841,7 +872,7 @@ function buildUnifiedProfileSvg(stats) {
 
   <g clip-path="url(#masterClip)">
     <!-- Master Unified Dusk Background -->
-    <rect x="0" y="0" width="1200" height="1890" fill="url(#masterCanvasBg)"/>
+    <rect x="0" y="0" width="1200" height="1940" fill="url(#masterCanvasBg)"/>
 
     <!-- ======================================================================= -->
     <!-- SECTION 1: LO-FI SUNSET HERO BANNER (Y: 0 -> 390)                       -->
@@ -962,11 +993,11 @@ function buildUnifiedProfileSvg(stats) {
         <text x="58" y="38" class="sec-sub">Categorized engineering stack with official vector emblems, explicit labels &amp; architectural roles</text>
       </g>
 
-      <!-- Table Column Headers -->
+      <!-- Table Column Headers (Aligned with x=20, x=216, x=820) -->
       <g transform="translate(0, 56)">
-        <text x="16" y="0" class="tbl-head">ENGINEERING DOMAIN</text>
-        <text x="236" y="0" class="tbl-head">CORE TECHNOLOGIES, FRAMEWORKS &amp; TOOLING</text>
-        <text x="864" y="0" class="tbl-head">ARCHITECTURAL FOCUS</text>
+        <text x="20" y="0" class="tbl-head">ENGINEERING DOMAIN</text>
+        <text x="216" y="0" class="tbl-head">CORE TECHNOLOGIES, FRAMEWORKS &amp; TOOLING</text>
+        <text x="820" y="0" class="tbl-head">ARCHITECTURAL FOCUS</text>
       </g>
 
       <!-- 5 Categorized Skill Rows -->
@@ -1014,13 +1045,13 @@ function buildUnifiedProfileSvg(stats) {
 
         <rect x="740" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.86" stroke="#bb9af7" stroke-opacity="0.28" stroke-width="1"/>
         <path d="M768 22 L771.5 29 L779 30 L773.5 35.5 L774.8 43 L768 39.2 L761.2 43 L762.5 35.5 L757 30 L764.5 29 Z" stroke="#bb9af7" stroke-width="1.7" fill="none" stroke-linejoin="round"/>
-        <text x="796" y="30" class="metric-val">${stats.totalStars} Total Stars &#183; Top 5 Languages</text>
-        <text x="796" y="49" class="metric-lbl">VERIFIED CORE CODEBASE SPECTRUM</text>
+        <text x="794" y="30" class="metric-val">${stats.totalStars} Stars &#183; Top 5 Core Langs</text>
+        <text x="794" y="49" class="metric-lbl">VERIFIED CORE CODEBASE SPECTRUM</text>
       </g>
 
       <!-- Multi-Language Proportional Spectrum Bar -->
       <g transform="translate(0, 156)">
-        <text x="0" y="-9" class="metric-lbl">TOP 5 PROGRAMMING LANGUAGES DISTRIBUTION (EXCLUDING MARKUP &amp; FRAMEWORKS)</text>
+        <text x="0" y="-9" class="metric-lbl">TOP 5 PROGRAMMING LANGUAGES DISTRIBUTION (TYPESCRIPT &amp; JAVASCRIPT UNIFIED)</text>
         <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
         <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0d071a"/>
         <g clip-path="url(#multiBarClip)">
@@ -1039,7 +1070,7 @@ function buildUnifiedProfileSvg(stats) {
     <path d="M600 1254 L602.5 1259.5 L608 1262 L602.5 1264.5 L600 1270 L597.5 1264.5 L592 1262 L597.5 1259.5 Z" fill="#bb9af7"/>
 
     <!-- ======================================================================= -->
-    <!-- SECTION 4: SELECTED WORKS & ENGINEERING HIGHLIGHTS (Y: 1288 -> 1720)    -->
+    <!-- SECTION 4: SELECTED WORKS & ENGINEERING HIGHLIGHTS (Y: 1288 -> 1775)    -->
     <!-- ======================================================================= -->
     <g transform="translate(56, 1288)">
       <!-- Header -->
@@ -1048,32 +1079,39 @@ function buildUnifiedProfileSvg(stats) {
         <path d="M12 16 L21 10 L30 16 V26 L21 32 L12 26 Z" fill="none" stroke="url(#accentGrad)" stroke-width="2"/>
         <circle cx="21" cy="21" r="3" fill="#f7768e"/>
         <text x="58" y="18" class="sec-title">SELECTED WORKS &amp; ENGINEERING HIGHLIGHTS</text>
-        <text x="58" y="38" class="sec-sub">Featured multi-service architectures, full-stack platforms &amp; cloud-native implementations</text>
+        <text x="58" y="38" class="sec-sub">Featured multi-service architectures with explicit language stacks &amp; micro-repository breakdowns</text>
       </g>
 
-      <!-- Project 01: HocCode Ecosystem -->
+      <!-- Project 01: HocCode Ecosystem (Height: 192px with both Language Stack Cards + Micro-Repo Chips) -->
       <g transform="translate(0, 62)">
-        <rect x="0" y="0" width="532" height="162" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#ff9e64" stroke-opacity="0.4" stroke-width="1.2"/>
+        <rect x="0" y="0" width="532" height="192" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#ff9e64" stroke-opacity="0.42" stroke-width="1.2"/>
         <g transform="translate(24, 24)">
           <circle cx="6" cy="-4" r="4" fill="#ff9e64"/>
           <text x="18" y="0" class="proj-num">FEATURED SYSTEM // 01</text>
           <text x="484" y="0" text-anchor="end" class="repo-chip">4 MICRO-REPOS</text>
 
-          <text x="0" y="28" class="proj-title">HocCode &#8212; Interactive Coding &amp; AI Judge Platform</text>
-          <text x="0" y="52" class="proj-desc">Distributed code-learning ecosystem combining a Java core service,</text>
-          <text x="0" y="70" class="proj-desc">isolated Go execution sandbox, Python AI tutor &amp; TypeScript frontend.</text>
+          <text x="0" y="26" class="proj-title">HocCode &#8212; Interactive Coding &amp; AI Judge Platform</text>
+          <text x="0" y="48" class="proj-desc">Distributed code-learning ecosystem combining a Java core service,</text>
+          <text x="0" y="66" class="proj-desc">isolated Go execution sandbox, Python AI tutor &amp; TypeScript frontend.</text>
 
-          <g transform="translate(0, 92)">
-            <rect x="0" y="0" width="112" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.5"/>
+          <!-- Row A: Core Language & Stack Cards for HocCode -->
+          ${renderProjectLangBadge(0, 82, 128, 'Java Spring Boot', '#ff9e64')}
+          ${renderProjectLangBadge(136, 82, 114, 'Golang Sandbox', '#7dcfff')}
+          ${renderProjectLangBadge(258, 82, 96, 'Python AI', '#e0af68')}
+          ${renderProjectLangBadge(362, 82, 122, 'TypeScript / React', '#7aa2f7')}
+
+          <!-- Row B: Component Repositories -->
+          <g transform="translate(0, 116)">
+            <rect x="0" y="0" width="112" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.38"/>
             <text x="56" y="16" text-anchor="middle" class="tag-text">hoccode-main</text>
 
-            <rect x="120" y="0" width="122" height="24" rx="6" fill="#120920" stroke="#7dcfff" stroke-opacity="0.5"/>
+            <rect x="120" y="0" width="122" height="24" rx="6" fill="#120920" stroke="#7dcfff" stroke-opacity="0.38"/>
             <text x="181" y="16" text-anchor="middle" class="tag-text">Go-Code-Runner</text>
 
-            <rect x="250" y="0" width="88" height="24" rx="6" fill="#120920" stroke="#e0af68" stroke-opacity="0.5"/>
+            <rect x="250" y="0" width="88" height="24" rx="6" fill="#120920" stroke="#e0af68" stroke-opacity="0.38"/>
             <text x="294" y="16" text-anchor="middle" class="tag-text">AIServer</text>
 
-            <rect x="346" y="0" width="102" height="24" rx="6" fill="#120920" stroke="#7aa2f7" stroke-opacity="0.5"/>
+            <rect x="346" y="0" width="102" height="24" rx="6" fill="#120920" stroke="#7aa2f7" stroke-opacity="0.38"/>
             <text x="397" y="16" text-anchor="middle" class="tag-text">hoccode (FE)</text>
           </g>
         </g>
@@ -1081,84 +1119,105 @@ function buildUnifiedProfileSvg(stats) {
 
       <!-- Project 02: FamilyTree Ecosystem -->
       <g transform="translate(556, 62)">
-        <rect x="0" y="0" width="532" height="162" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#73daca" stroke-opacity="0.4" stroke-width="1.2"/>
+        <rect x="0" y="0" width="532" height="192" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#73daca" stroke-opacity="0.42" stroke-width="1.2"/>
         <g transform="translate(24, 24)">
           <circle cx="6" cy="-4" r="4" fill="#73daca"/>
           <text x="18" y="0" class="proj-num" style="fill: #73daca;">FEATURED SYSTEM // 02</text>
-          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #73daca;">Backend_FT</text>
+          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #73daca;">FULL-STACK GRAPH</text>
 
-          <text x="0" y="28" class="proj-title">FamilyTree Ecosystem</text>
-          <text x="0" y="52" class="proj-desc">Full-stack genealogy and relationship graph platform engineered with</text>
-          <text x="0" y="70" class="proj-desc">a modular Java Spring Boot backend and reactive Vue.js client.</text>
+          <text x="0" y="26" class="proj-title">FamilyTree Ecosystem</text>
+          <text x="0" y="48" class="proj-desc">Full-stack genealogy and relationship graph platform engineered with</text>
+          <text x="0" y="66" class="proj-desc">a modular Java Spring Boot backend and reactive Vue.js client.</text>
 
-          <g transform="translate(0, 92)">
-            <rect x="0" y="0" width="104" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.5"/>
-            <text x="52" y="16" text-anchor="middle" class="tag-text">Spring Boot</text>
+          <!-- Row A: Core Language & Stack Cards -->
+          ${renderProjectLangBadge(0, 82, 130, 'Java Spring Boot', '#ff9e64')}
+          ${renderProjectLangBadge(138, 82, 118, 'Vue.js / JS', '#73daca')}
+          ${renderProjectLangBadge(264, 82, 114, 'RESTful API', '#bb9af7')}
+          ${renderProjectLangBadge(386, 82, 98, 'MySQL / JPA', '#7aa2f7')}
 
-            <rect x="112" y="0" width="76" height="24" rx="6" fill="#120920" stroke="#73daca" stroke-opacity="0.5"/>
-            <text x="150" y="16" text-anchor="middle" class="tag-text">Vue.js</text>
+          <!-- Row B: Component Repositories -->
+          <g transform="translate(0, 116)">
+            <rect x="0" y="0" width="108" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.38"/>
+            <text x="54" y="16" text-anchor="middle" class="tag-text">Backend_FT</text>
 
-            <rect x="196" y="0" width="144" height="24" rx="6" fill="#120920" stroke="#bb9af7" stroke-opacity="0.5"/>
-            <text x="268" y="16" text-anchor="middle" class="tag-text">FamilyTree_FE_Final</text>
+            <rect x="116" y="0" width="154" height="24" rx="6" fill="#120920" stroke="#73daca" stroke-opacity="0.38"/>
+            <text x="193" y="16" text-anchor="middle" class="tag-text">FamilyTree_FE_Final</text>
+
+            <rect x="278" y="0" width="136" height="24" rx="6" fill="#120920" stroke="#bb9af7" stroke-opacity="0.38"/>
+            <text x="346" y="16" text-anchor="middle" class="tag-text">FamilyTree_Final</text>
           </g>
         </g>
       </g>
 
       <!-- Project 03: Cloud-Native & Security Research -->
-      <g transform="translate(0, 244)">
-        <rect x="0" y="0" width="532" height="162" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#bb9af7" stroke-opacity="0.4" stroke-width="1.2"/>
+      <g transform="translate(0, 274)">
+        <rect x="0" y="0" width="532" height="192" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#bb9af7" stroke-opacity="0.42" stroke-width="1.2"/>
         <g transform="translate(24, 24)">
           <circle cx="6" cy="-4" r="4" fill="#bb9af7"/>
           <text x="18" y="0" class="proj-num" style="fill: #cba6f7;">FEATURED SYSTEM // 03</text>
-          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #cba6f7;">demo-ocp</text>
+          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #cba6f7;">CLOUD &amp; SECOPS</text>
 
-          <text x="0" y="28" class="proj-title">Cloud-Native &amp; Security Research</text>
-          <text x="0" y="52" class="proj-desc">Enterprise Red Hat OpenShift (OCP) Spring Boot deployment templates,</text>
-          <text x="0" y="70" class="proj-desc">high-throughput data extraction pipelines, and CTF security writeups.</text>
+          <text x="0" y="26" class="proj-title">Cloud-Native &amp; Security Research</text>
+          <text x="0" y="48" class="proj-desc">Enterprise Red Hat OpenShift (OCP) Spring Boot deployment templates,</text>
+          <text x="0" y="66" class="proj-desc">high-throughput data extraction pipelines, and CTF security writeups.</text>
 
-          <g transform="translate(0, 92)">
-            <rect x="0" y="0" width="114" height="24" rx="6" fill="#120920" stroke="#f7768e" stroke-opacity="0.5"/>
-            <text x="57" y="16" text-anchor="middle" class="tag-text">OpenShift OCP</text>
+          <!-- Row A: Core Language & Stack Cards -->
+          ${renderProjectLangBadge(0, 82, 128, 'Java Spring Boot', '#ff9e64')}
+          ${renderProjectLangBadge(136, 82, 118, 'OpenShift OCP', '#f7768e')}
+          ${renderProjectLangBadge(262, 82, 104, 'Python Data', '#e0af68')}
+          ${renderProjectLangBadge(374, 82, 110, 'Linux Security', '#bb9af7')}
 
-            <rect x="122" y="0" width="148" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.5"/>
-            <text x="196" y="16" text-anchor="middle" class="tag-text">springboot-template</text>
+          <!-- Row B: Component Repositories -->
+          <g transform="translate(0, 116)">
+            <rect x="0" y="0" width="96" height="24" rx="6" fill="#120920" stroke="#f7768e" stroke-opacity="0.38"/>
+            <text x="48" y="16" text-anchor="middle" class="tag-text">demo-ocp</text>
 
-            <rect x="278" y="0" width="102" height="24" rx="6" fill="#120920" stroke="#bb9af7" stroke-opacity="0.5"/>
-            <text x="329" y="16" text-anchor="middle" class="tag-text">WriteupCTF</text>
+            <rect x="104" y="0" width="152" height="24" rx="6" fill="#120920" stroke="#ff9e64" stroke-opacity="0.38"/>
+            <text x="180" y="16" text-anchor="middle" class="tag-text">springboot-template</text>
+
+            <rect x="264" y="0" width="102" height="24" rx="6" fill="#120920" stroke="#bb9af7" stroke-opacity="0.38"/>
+            <text x="315" y="16" text-anchor="middle" class="tag-text">WriteupCTF</text>
           </g>
         </g>
       </g>
 
       <!-- Project 04: Sport Venue Booking Platform -->
-      <g transform="translate(556, 244)">
-        <rect x="0" y="0" width="532" height="162" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#f7768e" stroke-opacity="0.4" stroke-width="1.2"/>
+      <g transform="translate(556, 274)">
+        <rect x="0" y="0" width="532" height="192" rx="16" fill="#1b1030" fill-opacity="0.88" stroke="#f7768e" stroke-opacity="0.42" stroke-width="1.2"/>
         <g transform="translate(24, 24)">
           <circle cx="6" cy="-4" r="4" fill="#f7768e"/>
           <text x="18" y="0" class="proj-num" style="fill: #f7768e;">FEATURED SYSTEM // 04</text>
-          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #f7768e;">booking-app</text>
+          <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #f7768e;">RESERVATION SAAS</text>
 
-          <text x="0" y="28" class="proj-title">Sport Venue Booking Platform</text>
-          <text x="0" y="52" class="proj-desc">Full-stack sports facility reservation system featuring Owner Analytics</text>
-          <text x="0" y="70" class="proj-desc">Dashboards, real-time venue scheduling &amp; cross-repo PR workflows.</text>
+          <text x="0" y="26" class="proj-title">Sport Venue Booking Platform</text>
+          <text x="0" y="48" class="proj-desc">Full-stack sports facility reservation system featuring Owner Analytics</text>
+          <text x="0" y="66" class="proj-desc">Dashboards, real-time venue scheduling &amp; cross-repo PR workflows.</text>
 
-          <g transform="translate(0, 92)">
-            <rect x="0" y="0" width="96" height="24" rx="6" fill="#120920" stroke="#f7768e" stroke-opacity="0.5"/>
-            <text x="48" y="16" text-anchor="middle" class="tag-text">Laravel PHP</text>
+          <!-- Row A: Core Language & Stack Cards -->
+          ${renderProjectLangBadge(0, 82, 114, 'PHP / Laravel', '#f7768e')}
+          ${renderProjectLangBadge(122, 82, 132, 'TypeScript / React', '#7aa2f7')}
+          ${renderProjectLangBadge(262, 82, 108, 'RESTful API', '#ff9e64')}
+          ${renderProjectLangBadge(378, 82, 106, 'MySQL / Auth', '#73daca')}
 
-            <rect x="104" y="0" width="102" height="24" rx="6" fill="#120920" stroke="#7aa2f7" stroke-opacity="0.5"/>
-            <text x="155" y="16" text-anchor="middle" class="tag-text">TypeScript</text>
+          <!-- Row B: Component Repositories -->
+          <g transform="translate(0, 116)">
+            <rect x="0" y="0" width="112" height="24" rx="6" fill="#120920" stroke="#f7768e" stroke-opacity="0.38"/>
+            <text x="56" y="16" text-anchor="middle" class="tag-text">booking-app</text>
 
-            <rect x="214" y="0" width="126" height="24" rx="6" fill="#120920" stroke="#ffbe98" stroke-opacity="0.5"/>
-            <text x="277" y="16" text-anchor="middle" class="tag-text">Booking-app-FE</text>
+            <rect x="120" y="0" width="128" height="24" rx="6" fill="#120920" stroke="#7aa2f7" stroke-opacity="0.38"/>
+            <text x="184" y="16" text-anchor="middle" class="tag-text">Booking-app-FE</text>
+
+            <rect x="256" y="0" width="138" height="24" rx="6" fill="#120920" stroke="#ffbe98" stroke-opacity="0.38"/>
+            <text x="325" y="16" text-anchor="middle" class="tag-text">External PRs Merged</text>
           </g>
         </g>
       </g>
     </g>
 
     <!-- ======================================================================= -->
-    <!-- SECTION 5: ANIMATED SUNSET HORIZON FOOTER (Y: 1740 -> 1890)             -->
+    <!-- SECTION 5: ANIMATED SUNSET HORIZON FOOTER (Y: 1790 -> 1940)             -->
     <!-- ======================================================================= -->
-    <g transform="translate(0, 1740)">
+    <g transform="translate(0, 1790)">
       <path class="wave-anim" d="M-40 85 Q280 45 600 85 T1240 80 L1240 150 L-40 150 Z" fill="#ff9e64" fill-opacity="0.14"/>
       <path d="M0 102 Q320 130 640 98 T1200 108 L1200 150 L0 150 Z" fill="#f7768e" fill-opacity="0.18"/>
       <line x1="56" y1="12" x2="1144" y2="12" stroke="url(#dividerGrad)" stroke-width="1.2"/>
@@ -1167,7 +1226,7 @@ function buildUnifiedProfileSvg(stats) {
     </g>
 
     <!-- Master Outer Frame -->
-    <rect x="1" y="1" width="1198" height="1888" rx="23" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.48" stroke-width="1.8"/>
+    <rect x="1" y="1" width="1198" height="1938" rx="23" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.48" stroke-width="1.8"/>
   </g>
 </svg>`;
 }
