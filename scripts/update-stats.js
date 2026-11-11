@@ -283,6 +283,14 @@ function getFallbackAuthenticatedStats() {
   };
 }
 
+// XML escape helper to ensure 100% valid XML/SVG rendering
+function escXml(str) {
+  return String(str)
+    .replace(/&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 // Helper to render a sleek Skill Badge with custom SVG icon + crisp label inside the Skill Table
 function renderTechBadge(x, y, width, label, accentColor, iconSvg) {
   return `
@@ -292,7 +300,7 @@ function renderTechBadge(x, y, width, label, accentColor, iconSvg) {
       <g transform="translate(8, 8)">
         ${iconSvg}
       </g>
-      <text x="35" y="20.5" class="tech-badge-txt">${label}</text>
+      <text x="35" y="20.5" class="tech-badge-txt">${escXml(label)}</text>
     </g>`;
 }
 
@@ -590,8 +598,8 @@ function buildUnifiedProfileSvg(stats) {
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="${row.color}"/>
-          <text x="22" y="27" class="row-domain">${row.domain}</text>
-          <text x="22" y="45" class="row-sub">${row.sub}</text>
+          <text x="22" y="27" class="row-domain">${escXml(row.domain)}</text>
+          <text x="22" y="45" class="row-sub">${escXml(row.sub)}</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -599,8 +607,8 @@ function buildUnifiedProfileSvg(stats) {
 
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
-          <text x="864" y="26" class="row-focus">${row.focus1}</text>
-          <text x="864" y="44" class="row-focus">${row.focus2}</text>
+          <text x="864" y="26" class="row-focus">${escXml(row.focus1)}</text>
+          <text x="864" y="44" class="row-focus">${escXml(row.focus2)}</text>
         </g>`;
     })
     .join('\n');

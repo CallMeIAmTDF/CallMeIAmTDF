@@ -361,8 +361,8 @@
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="#ff9e64"/>
-          <text x="22" y="27" class="row-domain">Backend & Systems</text>
-          <text x="22" y="45" class="row-sub">Core Services & Sandboxes</text>
+          <text x="22" y="27" class="row-domain">Backend &amp; Systems</text>
+          <text x="22" y="45" class="row-sub">Core Services &amp; Sandboxes</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -418,7 +418,7 @@
 
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
-          <text x="864" y="26" class="row-focus">Microservices, REST & GraphQL APIs,</text>
+          <text x="864" y="26" class="row-focus">Microservices, REST &amp; GraphQL APIs,</text>
           <text x="864" y="44" class="row-focus">Isolated Code Execution, High-Concurrency</text>
         </g>
 
@@ -427,8 +427,8 @@
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="#7aa2f7"/>
-          <text x="22" y="27" class="row-domain">Frontend & Web</text>
-          <text x="22" y="45" class="row-sub">Reactive UI & Interactive 3D</text>
+          <text x="22" y="27" class="row-domain">Frontend &amp; Web</text>
+          <text x="22" y="45" class="row-sub">Reactive UI &amp; Interactive 3D</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -485,7 +485,7 @@
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
           <text x="864" y="26" class="row-focus">SSR / SPA Architecture, Component Systems,</text>
-          <text x="864" y="44" class="row-focus">State Management, WebGL & 3D Motion</text>
+          <text x="864" y="44" class="row-focus">State Management, WebGL &amp; 3D Motion</text>
         </g>
 
         <g transform="translate(0, 214)">
@@ -493,8 +493,8 @@
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="#f7768e"/>
-          <text x="22" y="27" class="row-domain">Applied AI & Data</text>
-          <text x="22" y="45" class="row-sub">RAG, LLM Agents & Analytics</text>
+          <text x="22" y="27" class="row-domain">Applied AI &amp; Data</text>
+          <text x="22" y="45" class="row-sub">RAG, LLM Agents &amp; Analytics</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -543,7 +543,7 @@
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
           <text x="864" y="26" class="row-focus">Retrieval-Augmented Generation (RAG),</text>
-          <text x="864" y="44" class="row-focus">AI Code Tutors, Legal Chatbots & Indexing</text>
+          <text x="864" y="44" class="row-focus">AI Code Tutors, Legal Chatbots &amp; Indexing</text>
         </g>
 
         <g transform="translate(0, 286)">
@@ -551,8 +551,8 @@
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="#73daca"/>
-          <text x="22" y="27" class="row-domain">Databases & Storage</text>
-          <text x="22" y="45" class="row-sub">Relational, NoSQL & Caching</text>
+          <text x="22" y="27" class="row-domain">Databases &amp; Storage</text>
+          <text x="22" y="45" class="row-sub">Relational, NoSQL &amp; Caching</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -593,7 +593,7 @@
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
           <text x="864" y="26" class="row-focus">Schema Design, Query Optimization,</text>
-          <text x="864" y="44" class="row-focus">Distributed In-Memory Caching & Persistence</text>
+          <text x="864" y="44" class="row-focus">Distributed In-Memory Caching &amp; Persistence</text>
         </g>
 
         <g transform="translate(0, 358)">
@@ -601,8 +601,8 @@
           
           <!-- Left Domain Column -->
           <rect x="0" y="0" width="6" height="62" rx="3" fill="#bb9af7"/>
-          <text x="22" y="27" class="row-domain">Cloud & DevSecOps</text>
-          <text x="22" y="45" class="row-sub">Containers, OCP & CI/CD</text>
+          <text x="22" y="27" class="row-domain">Cloud &amp; DevSecOps</text>
+          <text x="22" y="45" class="row-sub">Containers, OCP &amp; CI/CD</text>
           <line x1="220" y1="10" x2="220" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
 
           <!-- Middle Column: Technology Badges with Vector Icons + Names -->
@@ -651,7 +651,7 @@
           <!-- Right Column: Architectural Focus -->
           <line x1="848" y1="10" x2="848" y2="52" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
           <text x="864" y="26" class="row-focus">Container Orchestration, OpenShift (OCP),</text>
-          <text x="864" y="44" class="row-focus">GitHub Actions Automation & Linux Security</text>
+          <text x="864" y="44" class="row-focus">GitHub Actions Automation &amp; Linux Security</text>
         </g>
     </g>
 
@@ -706,16 +706,16 @@
         <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
         <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0d071a"/>
         <g clip-path="url(#multiBarClip)">
-          <rect x="0.0" y="0" width="306.1" height="14" fill="#ff9e64" opacity="0.95">
+          <rect x="0.0" y="0" width="304.6" height="14" fill="#ff9e64" opacity="0.95">
         <title>Java: 28.0% (26 repos)</title>
       </rect>
-          <rect x="306.1" y="0" width="298.8" height="14" fill="#f7768e" opacity="0.95">
+          <rect x="304.6" y="0" width="299.2" height="14" fill="#f7768e" opacity="0.95">
         <title>JavaScript: 27.5% (33 repos)</title>
       </rect>
-          <rect x="604.9" y="0" width="236.7" height="14" fill="#7aa2f7" opacity="0.95">
+          <rect x="603.8" y="0" width="237.2" height="14" fill="#7aa2f7" opacity="0.95">
         <title>TypeScript: 21.8% (14 repos)</title>
       </rect>
-          <rect x="841.6" y="0" width="186.6" height="14" fill="#e0af68" opacity="0.95">
+          <rect x="841.0" y="0" width="187.1" height="14" fill="#e0af68" opacity="0.95">
         <title>Python: 17.2% (23 repos)</title>
       </rect>
           <rect x="1028.2" y="0" width="59.8" height="14" fill="#bb9af7" opacity="0.95">
