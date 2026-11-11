@@ -1,17 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 515" width="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="100%">
   <defs>
-    <!-- Lo-fi Dusk Sky & Card Background Gradients -->
     <linearGradient id="bgDusk" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#140c26"/>
-      <stop offset="45%" stop-color="#231438"/>
-      <stop offset="80%" stop-color="#381b46"/>
-      <stop offset="100%" stop-color="#4e214c"/>
-    </linearGradient>
-
-    <linearGradient id="horizonGlow" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ff9e64" stop-opacity="0.18"/>
-      <stop offset="50%" stop-color="#f7768e" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#bb9af7" stop-opacity="0.0"/>
+      <stop offset="0%" stop-color="#130b24"/>
+      <stop offset="50%" stop-color="#221338"/>
+      <stop offset="100%" stop-color="#381946"/>
     </linearGradient>
 
     <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -21,331 +13,266 @@
     </linearGradient>
 
     <clipPath id="cardClip">
-      <rect x="0" y="0" width="850" height="515" rx="20"/>
+      <rect x="0" y="0" width="1200" height="420" rx="22"/>
     </clipPath>
 
     <clipPath id="multiBarClip">
-      <rect x="0" y="0" width="760" height="12" rx="6"/>
+      <rect x="0" y="0" width="1088" height="14" rx="7"/>
     </clipPath>
   </defs>
 
   <style>
+    .eyebrow {
+      font: 600 11px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffbe98;
+      letter-spacing: 2.2px;
+    }
     .title {
-      font: 700 20px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      fill: #fff0f5;
+      font: 800 22px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+      fill: #fff5f8;
       letter-spacing: 0.6px;
     }
     .subtitle {
-      font: 400 12.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       fill: #d8bfd8;
-      letter-spacing: 0.3px;
     }
     .badge-label {
-      font: 600 10px 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
       fill: #ffbe98;
       letter-spacing: 1px;
     }
     .metric-val {
-      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font: 700 20px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       fill: #ffffff;
     }
     .metric-lbl {
-      font: 500 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
       fill: #cba6f7;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
+    }
+    .rank-lbl {
+      font: 600 10px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #9a86b8;
+      letter-spacing: 1px;
     }
     .lang-name {
-      font: 600 13.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-      fill: #f8f8f2;
+      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #fff8f6;
     }
     .lang-meta {
-      font: 400 11.5px 'Cascadia Code', 'Fira Code', monospace;
-      fill: #a99ec2;
+      font: 400 12px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #b8a9d1;
     }
     .lang-pct {
-      font: 700 13px 'Cascadia Code', 'Fira Code', monospace;
+      font: 700 15px 'Cascadia Code', 'Fira Code', monospace;
     }
     .footer-note {
-      font: 400 11px 'Cascadia Code', 'Fira Code', monospace;
+      font: 500 11px 'Cascadia Code', 'Fira Code', monospace;
       fill: #9a86b8;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.6px;
     }
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.75; }
-    }
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
-    }
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(6px); }
-      100% { opacity: 1; transform: translateY(0); }
+      50% { opacity: 0.85; }
     }
     .star-twinkle {
       animation: pulseGlow 4s ease-in-out infinite;
     }
-    .cloud-drift {
-      animation: floatSlow 7s ease-in-out infinite;
-    }
-    . CardFrame {
-      stroke: url(#accentGrad);
-    }
   </style>
 
   <g clip-path="url(#cardClip)">
-    <!-- Base Dusk Background -->
-    <rect x="0" y="0" width="850" height="515" fill="url(#bgDusk)"/>
-    <rect x="0" y="0" width="850" height="515" fill="url(#horizonGlow)"/>
+    <rect x="0" y="0" width="1200" height="420" fill="url(#bgDusk)"/>
 
-    <!-- Ambient Poetic Sunset Sun & Distant Clouds in Background -->
-    <circle cx="740" cy="85" r="78" fill="#ff9e64" opacity="0.08" class="star-twinkle"/>
-    <circle cx="740" cy="85" r="48" fill="#f7768e" opacity="0.10"/>
-    <path d="M0 465 Q220 430 450 465 T850 450 L850 515 L0 515 Z" fill="#120a21" opacity="0.55"/>
+    <!-- Ambient Dusk Sun Glow -->
+    <circle cx="1060" cy="80" r="110" fill="#ff9e64" opacity="0.07" class="star-twinkle"/>
+    <circle cx="1060" cy="80" r="65" fill="#f7768e" opacity="0.09"/>
+    <path d="M0 375 Q360 345 720 378 T1200 360 L1200 420 L0 420 Z" fill="#10081e" opacity="0.65"/>
 
-    <!-- Subtle Starlight Particles -->
-    <circle cx="120" cy="40" r="1.3" fill="#ffe5d9" class="star-twinkle" style="animation-delay: 0.5s"/>
-    <circle cx="380" cy="28" r="1.5" fill="#ffd6e0" class="star-twinkle" style="animation-delay: 1.5s"/>
-    <circle cx="590" cy="52" r="1.2" fill="#e2afff" class="star-twinkle" style="animation-delay: 2.3s"/>
-    <circle cx="805" cy="145" r="1.5" fill="#ffbe98" class="star-twinkle" style="animation-delay: 0.9s"/>
+    <!-- Border -->
+    <rect x="1" y="1" width="1198" height="418" rx="21" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.42" stroke-width="1.5"/>
 
-    <!-- Outer Border Frame -->
-    <rect x="1" y="1" width="848" height="513" rx="19" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.38" stroke-width="1.5"/>
-
-    <!-- Header Section -->
-    <g transform="translate(45, 36)">
-      <!-- Custom Vector Compass / Star Emblem (No Emoji) -->
+    <!-- Header -->
+    <g transform="translate(56, 34)">
       <g transform="translate(0, 2)">
-        <rect x="0" y="0" width="38" height="38" rx="10" fill="#2a1a42" stroke="#ff9e64" stroke-opacity="0.45" stroke-width="1.2"/>
-        <path d="M19 7 L22.5 15.5 L31 19 L22.5 22.5 L19 31 L15.5 22.5 L7 19 L15.5 15.5 Z" fill="url(#accentGrad)"/>
-        <circle cx="19" cy="19" r="2.5" fill="#140c26"/>
+        <rect x="0" y="0" width="42" height="42" rx="11" fill="#281740" stroke="#ff9e64" stroke-opacity="0.5" stroke-width="1.2"/>
+        <path d="M21 8 L24.8 17.2 L34 21 L24.8 24.8 L21 34 L17.2 24.8 L8 21 L17.2 17.2 Z" fill="url(#accentGrad)"/>
+        <circle cx="21" cy="21" r="2.8" fill="#130b24"/>
       </g>
 
-      <text x="52" y="19" class="title">LANGUAGE TELEMETRY &amp; SPECTRUM</text>
-      <text x="52" y="38" class="subtitle">Aggregated across owned repositories, private workspaces &amp; external pull requests</text>
+      <text x="58" y="19" class="title">TOP 5 CORE LANGUAGES &amp; CONTRIBUTION TELEMETRY</text>
+      <text x="58" y="40" class="subtitle">Pure programming languages aggregated across public, private &amp; external PR repositories</text>
 
-      <!-- Live Sync Pill -->
-      <g transform="translate(555, 4)">
-        <rect x="0" y="0" width="205" height="28" rx="14" fill="#25163a" stroke="#f7768e" stroke-opacity="0.4" stroke-width="1"/>
-        <circle cx="16" cy="14" r="4" fill="#ff9e64" class="star-twinkle"/>
-        <text x="28" y="18" class="badge-label">SYNCED: PUBLIC + PR + PRIV</text>
+      <!-- Live Sync Pill (Wider & Properly Aligned) -->
+      <g transform="translate(838, 6)">
+        <rect x="0" y="0" width="250" height="30" rx="15" fill="#24143a" stroke="#f7768e" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="18" cy="15" r="4" fill="#73daca" class="star-twinkle"/>
+        <text x="32" y="19" class="badge-label">LIVE: PUBLIC + PRIVATE + PRs</text>
       </g>
     </g>
 
-    <!-- Metric Summary Strip -->
-    <g transform="translate(45, 96)">
-      <!-- Metric 1: Repositories -->
-      <rect x="0" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#ff9e64" stroke-opacity="0.22" stroke-width="1"/>
-      <path d="M22 21 H34 V39 H22 Z M25 25 H31 M25 30 H31" stroke="#ff9e64" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <text x="48" y="29" class="metric-val">81 Public &amp; 22 Private</text>
-      <text x="48" y="47" class="metric-lbl">INDEXED REPOSITORIES</text>
+    <!-- 3 Summary Metric Cards (Width 348px each, Gap 22px -> 3*348 + 44 = 1088px) -->
+    <g transform="translate(56, 98)">
+      <!-- Metric 1 -->
+      <rect x="0" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#ff9e64" stroke-opacity="0.25" stroke-width="1"/>
+      <path d="M24 22 H38 V42 H24 Z M28 27 H34 M28 33 H34" stroke="#ff9e64" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <text x="54" y="30" class="metric-val">73 Public Repos</text>
+      <text x="54" y="49" class="metric-lbl">OWNED &amp; COLLABORATOR REPOSITORIES</text>
 
-      <!-- Metric 2: Pull Requests & External Contributions -->
-      <rect x="260" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#f7768e" stroke-opacity="0.22" stroke-width="1"/>
-      <circle cx="284" cy="24" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <circle cx="284" cy="38" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <circle cx="296" cy="38" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <path d="M284 27.5 V34.5 M296 34.5 V28 C296 25 293 24 288 24" stroke="#f7768e" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <text x="312" y="29" class="metric-val">25 PRs (4 External)</text>
-      <text x="312" y="47" class="metric-lbl">MERGE REQUEST FOOTPRINT</text>
+      <!-- Metric 2 -->
+      <rect x="370" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#f7768e" stroke-opacity="0.25" stroke-width="1"/>
+      <circle cx="396" cy="25" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <circle cx="396" cy="40" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <circle cx="410" cy="40" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <path d="M396 29 V36 M410 36 V29 C410 26 407 25 401 25" stroke="#f7768e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <text x="428" y="30" class="metric-val">25 Pull Requests (4 External)</text>
+      <text x="428" y="49" class="metric-lbl">CROSS-PROJECT MERGE REQUESTS</text>
 
-      <!-- Metric 3: Stargazers & Active Languages -->
-      <rect x="520" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#bb9af7" stroke-opacity="0.22" stroke-width="1"/>
-      <path d="M546 21 L549 27.5 L556 28.5 L551 33.5 L552.2 40.5 L546 37 L539.8 40.5 L541 33.5 L536 28.5 L543 27.5 Z" stroke="#bb9af7" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-      <text x="568" y="29" class="metric-val">206 Stars &#183; 8 Core Langs</text>
-      <text x="568" y="47" class="metric-lbl">COMMUNITY &amp; STACK DIVERSITY</text>
+      <!-- Metric 3 -->
+      <rect x="740" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#bb9af7" stroke-opacity="0.25" stroke-width="1"/>
+      <path d="M768 22 L771.5 29 L779 30 L773.5 35.5 L774.8 43 L768 39.2 L761.2 43 L762.5 35.5 L757 30 L764.5 29 Z" stroke="#bb9af7" stroke-width="1.7" fill="none" stroke-linejoin="round"/>
+      <text x="796" y="30" class="metric-val">193 Total Stars &#183; Top 5 Languages</text>
+      <text x="796" y="49" class="metric-lbl">VERIFIED CORE CODEBASE SPECTRUM</text>
     </g>
 
-    <!-- Multi-Language Proportional Spectrum Bar -->
-    <g transform="translate(45, 180)">
-      <text x="0" y="-8" class="metric-lbl">PROPORTIONAL CODEBASE DISTRIBUTION</text>
-      <text x="760" y="-8" text-anchor="end" class="metric-lbl">100.0% VERIFIED</text>
-      <rect x="0" y="0" width="760" height="12" rx="6" fill="#120c24"/>
+    <!-- Multi-Language Proportional Bar -->
+    <g transform="translate(56, 192)">
+      <text x="0" y="-9" class="metric-lbl">TOP 5 PROGRAMMING LANGUAGES DISTRIBUTION (EXCLUDING MARKUP &amp; FRAMEWORKS)</text>
+      <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
+      <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0f081d"/>
       <g clip-path="url(#multiBarClip)">
-        <rect x="0.0" y="0" width="256.8" height="12" fill="#7aa2f7" opacity="0.92">
-        <title>TypeScript: 33.8% (14 repos)</title>
+        <rect x="0.0" y="0" width="326.1" height="14" fill="#ff9e64" opacity="0.95">
+        <title>Java: 30.0% (13 repos)</title>
       </rect>
-        <rect x="256.8" y="0" width="150.5" height="12" fill="#ff9e64" opacity="0.92">
-        <title>Java: 19.8% (26 repos)</title>
+        <rect x="326.1" y="0" width="290.9" height="14" fill="#e0af68" opacity="0.95">
+        <title>Python: 26.7% (12 repos)</title>
       </rect>
-        <rect x="407.3" y="0" width="97.3" height="12" fill="#bb9af7" opacity="0.92">
-        <title>CSS: 12.8% (30 repos)</title>
+        <rect x="617.0" y="0" width="250.5" height="14" fill="#7aa2f7" opacity="0.95">
+        <title>TypeScript: 23.0% (10 repos)</title>
       </rect>
-        <rect x="504.6" y="0" width="89.4" height="12" fill="#ff7a93" opacity="0.92">
-        <title>HTML: 11.8% (33 repos)</title>
+        <rect x="867.5" y="0" width="164.9" height="14" fill="#f7768e" opacity="0.95">
+        <title>JavaScript: 15.2% (7 repos)</title>
       </rect>
-        <rect x="594.0" y="0" width="77.9" height="12" fill="#f7768e" opacity="0.92">
-        <title>JavaScript: 10.3% (33 repos)</title>
-      </rect>
-        <rect x="672.0" y="0" width="37.2" height="12" fill="#9d7cd8" opacity="0.92">
-        <title>PHP: 4.9% (4 repos)</title>
-      </rect>
-        <rect x="709.2" y="0" width="28.5" height="12" fill="#c0caf5" opacity="0.92">
-        <title>C#: 3.7% (2 repos)</title>
-      </rect>
-        <rect x="737.7" y="0" width="22.3" height="12" fill="#e0af68" opacity="0.92">
-        <title>Python: 2.9% (23 repos)</title>
+        <rect x="1032.4" y="0" width="55.6" height="14" fill="#bb9af7" opacity="0.95">
+        <title>PHP: 5.1% (2 repos)</title>
       </rect>
       </g>
     </g>
 
-    <!-- Language Breakdown Grid (2 Columns x 4 Rows) -->
+    <!-- 5 Side-by-Side Language Cards -->
     
-      <g transform="translate(45, 232)" class="lang-row" style="animation-delay: 0.00s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(56, 236)">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="#ff9e64" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#7aa2f7" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#7aa2f7"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#ff9e64" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="#ff9e64"/>
+          <text x="20" y="0" class="rank-lbl">RANK #01</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#ff9e64">30.0%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">TypeScript</text>
-        <text x="165" y="21" class="lang-meta">14 projects + 1 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#7aa2f7">33.8%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">Java</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="111" height="4" rx="2" fill="#7aa2f7" class="bar-grow" style="animation-delay: 0.00s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">13 repos &#183; 1 PR repo</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="50" height="6" rx="3" fill="#ff9e64"/>
       </g>
 
-      <g transform="translate(445, 232)" class="lang-row" style="animation-delay: 0.12s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(277, 236)">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="#e0af68" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#ff9e64" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#ff9e64"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#e0af68" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="#e0af68"/>
+          <text x="20" y="0" class="rank-lbl">RANK #02</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#e0af68">26.7%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">Java</text>
-        <text x="165" y="21" class="lang-meta">26 projects + 1 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#ff9e64">19.8%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">Python</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="65" height="4" rx="2" fill="#ff9e64" class="bar-grow" style="animation-delay: 0.12s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">12 repositories</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="45" height="6" rx="3" fill="#e0af68"/>
       </g>
 
-      <g transform="translate(45, 290)" class="lang-row" style="animation-delay: 0.24s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(498, 236)">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="#7aa2f7" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#bb9af7" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#bb9af7"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#7aa2f7" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="#7aa2f7"/>
+          <text x="20" y="0" class="rank-lbl">RANK #03</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#7aa2f7">23.0%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">CSS</text>
-        <text x="165" y="21" class="lang-meta">30 projects + 2 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#bb9af7">12.8%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">TypeScript</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="42" height="4" rx="2" fill="#bb9af7" class="bar-grow" style="animation-delay: 0.24s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">10 repos &#183; 1 PR repo</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="39" height="6" rx="3" fill="#7aa2f7"/>
       </g>
 
-      <g transform="translate(445, 290)" class="lang-row" style="animation-delay: 0.36s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(719, 236)">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="#f7768e" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#ff7a93" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#ff7a93"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#f7768e" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="#f7768e"/>
+          <text x="20" y="0" class="rank-lbl">RANK #04</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#f7768e">15.2%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">HTML</text>
-        <text x="165" y="21" class="lang-meta">33 projects + 1 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#ff7a93">11.8%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">JavaScript</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="39" height="4" rx="2" fill="#ff7a93" class="bar-grow" style="animation-delay: 0.36s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">7 repos &#183; 1 PR repo</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="25" height="6" rx="3" fill="#f7768e"/>
       </g>
 
-      <g transform="translate(45, 348)" class="lang-row" style="animation-delay: 0.48s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(940, 236)">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="#bb9af7" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#f7768e" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#f7768e"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="#bb9af7" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="#bb9af7"/>
+          <text x="20" y="0" class="rank-lbl">RANK #05</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="#bb9af7">5.1%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">JavaScript</text>
-        <text x="165" y="21" class="lang-meta">33 projects + 3 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#f7768e">10.3%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">PHP</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="34" height="4" rx="2" fill="#f7768e" class="bar-grow" style="animation-delay: 0.48s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">2 repos &#183; 1 PR repo</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="12" height="6" rx="3" fill="#bb9af7"/>
       </g>
 
-      <g transform="translate(445, 348)" class="lang-row" style="animation-delay: 0.60s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
-        
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#9d7cd8" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#9d7cd8"/>
-        </g>
-
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">PHP</text>
-        <text x="165" y="21" class="lang-meta">4 projects + 1 PR target</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#9d7cd8">4.9%</text>
-
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="16" height="4" rx="2" fill="#9d7cd8" class="bar-grow" style="animation-delay: 0.60s"/>
-      </g>
-
-      <g transform="translate(45, 406)" class="lang-row" style="animation-delay: 0.72s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
-        
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#c0caf5" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#c0caf5"/>
-        </g>
-
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">C#</text>
-        <text x="165" y="21" class="lang-meta">2 projects</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#c0caf5">3.7%</text>
-
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="12" height="4" rx="2" fill="#c0caf5" class="bar-grow" style="animation-delay: 0.72s"/>
-      </g>
-
-      <g transform="translate(445, 406)" class="lang-row" style="animation-delay: 0.84s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
-        
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="#e0af68" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="#e0af68"/>
-        </g>
-
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">Python</text>
-        <text x="165" y="21" class="lang-meta">23 projects</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="#e0af68">2.9%</text>
-
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="10" height="4" rx="2" fill="#e0af68" class="bar-grow" style="animation-delay: 0.84s"/>
-      </g>
-
-    <!-- Subtle Poetic Footer -->
-    <line x1="45" y1="472" x2="805" y2="472" stroke="#ff9e64" stroke-opacity="0.15" stroke-width="1"/>
-    <text x="45" y="493" class="footer-note">SOURCE: GITHUB GRAPHQL &amp; REST API // OWNER + COLLABORATOR + EXTERNAL PULL REQUESTS</text>
-    <text x="805" y="493" text-anchor="end" class="footer-note">DUSK THEME &#183; @CallMeIAmTDF</text>
+    <!-- Footer Line -->
+    <line x1="56" y1="382" x2="1144" y2="382" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+    <text x="56" y="402" class="footer-note">DATA SOURCE: GITHUB GRAPHQL API (PUBLIC + PRIVATE REPOSITORIES + EXTERNAL PULL REQUESTS)</text>
+    <text x="1144" y="402" text-anchor="end" class="footer-note">LO-FI SUNSET TELEMETRY &#183; @CallMeIAmTDF</text>
   </g>
 </svg>

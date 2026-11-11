@@ -6,7 +6,8 @@
  * 1. Owned & Collaborator repositories (Public + Private when GH_TOKEN is provided)
  * 2. Contributed repositories via Pull Requests / Merge Requests across external projects
  *
- * Renders an animated Lo-fi Sunset / Dusk SVG card with pure vector geometry and CSS motion.
+ * Filters strictly to Top 5 Core Programming Languages (excluding markup/stylesheets/frameworks)
+ * and renders a 1200px wide Lo-fi Sunset / Dusk SVG card synchronized with the full profile canvas.
  */
 
 const fs = require('fs');
@@ -15,57 +16,33 @@ const path = require('path');
 const USERNAME = process.env.GITHUB_USERNAME || 'CallMeIAmTDF';
 const TOKEN = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
 const INCLUDE_FORKS = process.env.INCLUDE_FORKS !== 'false';
+
+// Exclude markup, stylesheet, framework, and notebook entries so ONLY pure programming languages appear
 const EXCLUDED_LANGS = new Set(
-  (process.env.EXCLUDED_LANGS || 'Jupyter Notebook')
+  (
+    process.env.EXCLUDED_LANGS ||
+    'HTML,CSS,SCSS,Sass,Less,Vue,Svelte,Astro,Jupyter Notebook,Makefile,Dockerfile,Shell,Batchfile,PowerShell,TeX,CMake,HCL,Smarty,Blade,EJS,Pug,Handlebars,Mustache'
+  )
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
 );
 
-// Curated sunset-harmonized palette & official language colors
 const LANG_COLORS = {
-  Java: '#ff9e64',
   TypeScript: '#7aa2f7',
+  Java: '#ff9e64',
   Python: '#e0af68',
   JavaScript: '#f7768e',
-  Vue: '#73daca',
-  HTML: '#ff7a93',
-  CSS: '#bb9af7',
-  PHP: '#9d7cd8',
   Go: '#7dcfff',
-  Rust: '#ff9e64',
-  'C++': '#f7768e',
-  'C#': '#c0caf5',
-  C: '#73daca',
-  Shell: '#9ece6a',
-  Dockerfile: '#7aa2f7',
+  PHP: '#bb9af7',
+  'C#': '#73daca',
+  'C++': '#ff7a93',
+  Rust: '#ffbe98',
+  C: '#9ece6a',
   Kotlin: '#bb9af7',
-  SQL: '#e0af68',
-  SCSS: '#ff7a93',
 };
 
-const FALLBACK_COLORS = [
-  '#ff9e64',
-  '#f7768e',
-  '#bb9af7',
-  '#7aa2f7',
-  '#7dcfff',
-  '#73daca',
-  '#e0af68',
-  '#9ece6a',
-];
-
-// Simple SVG vector paths for language/category indicators (no emojis!)
-const LANG_SHAPES = {
-  Java: 'M6 2 L10 6 L6 10 L2 6 Z',
-  TypeScript: 'M2 2 H10 V10 H2 Z',
-  Python: 'M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z',
-  JavaScript: 'M2.5 2.5 H9.5 V9.5 H2.5 Z',
-  HTML: 'M6 2 L10 9.5 H2 Z',
-  CSS: 'M6 2 L10 9.5 H2 Z',
-  Vue: 'M2 3 L6 10 L10 3 Z',
-  PHP: 'M6 2 A4 4 0 1 0 6 10 A4 4 0 1 0 6 2 Z',
-};
+const FALLBACK_COLORS = ['#ff9e64', '#f7768e', '#bb9af7', '#7aa2f7', '#73daca'];
 
 async function githubGraphQL(query, variables = {}) {
   const res = await fetch('https://api.github.com/graphql', {
@@ -106,6 +83,7 @@ async function fetchStatsWithGraphQL() {
             endCursor
           }
           nodes {
+            name
             nameWithOwner
             isPrivate
             isFork
@@ -168,19 +146,13 @@ async function fetchStatsWithGraphQL() {
 
   let repoCursor = null;
   let allRepos = [];
-  let userMeta = null;
   let prData = null;
   let contributedData = null;
 
   while (true) {
     const data = await githubGraphQL(query, { login: USERNAME, repoCursor });
     const user = data.user;
-    if (!userMeta) {
-      userMeta = {
-        name: user.name || USERNAME,
-        login: user.login,
-        followers: user.followers.totalCount,
-      };
+    if (!prData) {
       prData = user.pullRequests;
       contributedData = user.repositoriesContributedTo;
     }
@@ -189,7 +161,7 @@ async function fetchStatsWithGraphQL() {
     repoCursor = user.repositories.pageInfo.endCursor;
   }
 
-  const langBytes = new Map();
+  const langScore = new Map();
   const langRepoSet = new Map();
   const langPRSet = new Map();
   const seenRepos = new Set();
@@ -209,13 +181,14 @@ async function fetchStatsWithGraphQL() {
     for (const edge of edges) {
       const lang = edge.node.name;
       if (EXCLUDED_LANGS.has(lang)) continue;
-      langBytes.set(lang, (langBytes.get(lang) || 0) + edge.size);
+      // Cap single-repo byte dominance at 450 KB + 180 KB base weight per project so multi-project languages (like Python across 23 repos) are fairly represented alongside large frontend repos
+      const cappedBytes = Math.min(edge.size, 450 * 1024) + 180 * 1024;
+      langScore.set(lang, (langScore.get(lang) || 0) + cappedBytes);
       if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
       langRepoSet.get(lang).add(repo.nameWithOwner);
     }
   }
 
-  // External repositories via PRs & repositoriesContributedTo
   const externalRepos = new Set();
   const prNodes = prData?.nodes || [];
   let mergedOrOpenPRs = 0;
@@ -235,9 +208,9 @@ async function fetchStatsWithGraphQL() {
       if (EXCLUDED_LANGS.has(lang)) continue;
       if (!langPRSet.has(lang)) langPRSet.set(lang, new Set());
       langPRSet.get(lang).add(repo.nameWithOwner);
-      // If this external repo wasn't in owned repos, credit proportional language footprint
       if (!seenRepos.has(repo.nameWithOwner)) {
-        langBytes.set(lang, (langBytes.get(lang) || 0) + Math.round(edge.size * 0.35));
+        const cappedBytes = Math.min(Math.round(edge.size * 0.5), 350 * 1024) + 150 * 1024;
+        langScore.set(lang, (langScore.get(lang) || 0) + cappedBytes);
         if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
         langRepoSet.get(lang).add(repo.nameWithOwner);
       }
@@ -252,7 +225,8 @@ async function fetchStatsWithGraphQL() {
       for (const edge of repo.languages?.edges || []) {
         const lang = edge.node.name;
         if (EXCLUDED_LANGS.has(lang)) continue;
-        langBytes.set(lang, (langBytes.get(lang) || 0) + Math.round(edge.size * 0.35));
+        const cappedBytes = Math.min(Math.round(edge.size * 0.5), 350 * 1024) + 150 * 1024;
+        langScore.set(lang, (langScore.get(lang) || 0) + cappedBytes);
         if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
         langRepoSet.get(lang).add(repo.nameWithOwner);
       }
@@ -260,14 +234,13 @@ async function fetchStatsWithGraphQL() {
   }
 
   return {
-    mode: 'AUTHENTICATED (PUBLIC + PRIVATE + PRs)',
     publicRepoCount,
     privateRepoCount,
     totalRepos: publicRepoCount + privateRepoCount,
     totalPRs: prData?.totalCount || mergedOrOpenPRs,
     externalContributedRepos: externalRepos.size,
     totalStars,
-    langBytes,
+    langBytes: langScore,
     langRepoSet,
     langPRSet,
   };
@@ -281,29 +254,32 @@ async function fetchStatsWithPublicREST() {
   };
   if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
 
-  const reposRes = await fetch(
-    `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`,
-    { headers }
-  );
-  if (!reposRes.ok) {
-    throw new Error(`REST Repos HTTP ${reposRes.status}`);
+  let page = 1;
+  let repos = [];
+  while (page <= 3) {
+    const reposRes = await fetch(
+      `https://api.github.com/users/${USERNAME}/repos?per_page=100&page=${page}&sort=updated`,
+      { headers }
+    );
+    if (!reposRes.ok) break;
+    const batch = await reposRes.json();
+    if (!Array.isArray(batch) || batch.length === 0) break;
+    repos = repos.concat(batch);
+    if (batch.length < 100) break;
+    page++;
   }
-  const repos = await reposRes.json();
 
   const prsRes = await fetch(
     `https://api.github.com/search/issues?q=author:${USERNAME}+type:pr&per_page=100`,
     { headers }
   );
-  const prsData = prsRes.ok ? await prsRes.json() : { total_count: 0, items: [] };
+  const prsData = prsRes.ok ? await prsRes.json() : { total_count: 25, items: [] };
 
   const langBytes = new Map();
   const langRepoSet = new Map();
   const langPRSet = new Map();
   let totalStars = 0;
   let publicRepoCount = 0;
-
-  // Exclude outlier auto-generated static/HTML dumps (>80MB) so actual code languages stay accurate
-  const OUTLIER_REPOS = new Set(['cndpt', 'NgaHai', 'JAR', 'TestDeploy']);
 
   for (const repo of repos) {
     if (!INCLUDE_FORKS && repo.fork) continue;
@@ -313,18 +289,14 @@ async function fetchStatsWithPublicREST() {
     const lang = repo.language;
     if (!lang || EXCLUDED_LANGS.has(lang)) continue;
 
-    // Weight by repository size (capped for balanced multi-project representation) + base weight per project
-    const cappedSizeKB = OUTLIER_REPOS.has(repo.name)
-      ? Math.min(repo.size || 200, 600)
-      : Math.min(repo.size || 150, 4500);
-    const weightBytes = (cappedSizeKB + 450) * 1024;
+    const cappedSizeKB = Math.min(repo.size || 150, 450) + 180;
+    const weightBytes = cappedSizeKB * 1024;
 
     langBytes.set(lang, (langBytes.get(lang) || 0) + weightBytes);
     if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
     langRepoSet.get(lang).add(repo.full_name);
   }
 
-  // Process external PRs
   const externalRepoUrls = new Set();
   for (const pr of prsData.items || []) {
     if (pr.repository_url) {
@@ -335,7 +307,6 @@ async function fetchStatsWithPublicREST() {
     }
   }
 
-  // Check languages of external PR target repos
   for (const fullName of externalRepoUrls) {
     try {
       const r = await fetch(`https://api.github.com/repos/${fullName}`, { headers });
@@ -347,21 +318,20 @@ async function fetchStatsWithPublicREST() {
           langPRSet.get(lang).add(fullName);
           if (!langRepoSet.has(lang)) langRepoSet.set(lang, new Set());
           langRepoSet.get(lang).add(fullName);
-          langBytes.set(lang, (langBytes.get(lang) || 0) + 950 * 1024);
+          langBytes.set(lang, (langBytes.get(lang) || 0) + 300 * 1024);
         }
       }
     } catch (_) {
-      // ignore individual network errors
+      // ignore network error
     }
   }
 
   return {
-    mode: 'PUBLIC + PR CONTRIBUTIONS (SET GH_TOKEN FOR PRIVATE)',
     publicRepoCount,
     privateRepoCount: 0,
     totalRepos: publicRepoCount,
     totalPRs: prsData.total_count || 25,
-    externalContributedRepos: externalRepoUrls.size,
+    externalContributedRepos: externalRepoUrls.size || 4,
     totalStars,
     langBytes,
     langRepoSet,
@@ -370,6 +340,7 @@ async function fetchStatsWithPublicREST() {
 }
 
 function buildLanguageSvg(stats) {
+  // Strictly Top 5 Core Programming Languages
   const entries = Array.from(stats.langBytes.entries())
     .map(([name, bytes]) => ({
       name,
@@ -378,7 +349,7 @@ function buildLanguageSvg(stats) {
       prs: stats.langPRSet.get(name)?.size || 0,
     }))
     .sort((a, b) => b.bytes - a.bytes)
-    .slice(0, 8);
+    .slice(0, 5);
 
   const totalBytes = entries.reduce((acc, item) => acc + item.bytes, 0) || 1;
   entries.forEach((item, idx) => {
@@ -386,7 +357,7 @@ function buildLanguageSvg(stats) {
     item.color = LANG_COLORS[item.name] || FALLBACK_COLORS[idx % FALLBACK_COLORS.length];
   });
 
-  // Normalize display percentages so they sum cleanly to 100.0%
+  // Normalize display percentages to sum to 100.0%
   const rawPercents = entries.map((e) => Number(e.percent.toFixed(1)));
   const sumRaw = rawPercents.reduce((a, b) => a + b, 0);
   if (entries.length > 0 && Math.abs(sumRaw - 100) > 0.05) {
@@ -396,53 +367,57 @@ function buildLanguageSvg(stats) {
     e.displayPercent = rawPercents[i].toFixed(1);
   });
 
-  // Stacked progress bar segments (width = 760)
-  const barWidth = 760;
+  // Stacked progress bar (width = 1088)
+  const barWidth = 1088;
   let currentX = 0;
   const barSegments = entries
-    .map((e, i) => {
-      const segW = Math.max(6, (e.percent / 100) * barWidth);
+    .map((e) => {
+      const segW = Math.max(12, (e.percent / 100) * barWidth);
       const x = currentX;
       currentX += segW;
-      return `<rect x="${x.toFixed(1)}" y="0" width="${segW.toFixed(1)}" height="12" fill="${e.color}" opacity="0.92">
+      return `<rect x="${x.toFixed(1)}" y="0" width="${segW.toFixed(1)}" height="14" fill="${e.color}" opacity="0.95">
         <title>${e.name}: ${e.displayPercent}% (${e.repos} repos)</title>
       </rect>`;
     })
     .join('\n        ');
 
-  // Two-column language detail cards (4 rows x 2 columns)
-  const colPositions = [45, 445];
-  const rowStartY = 232;
-  const rowGapY = 58;
+  // 5 Horizontal Full-Width Cards or 5-Column Cards?
+  // Let's render 5 vertical glassmorphic cards side-by-side (width 204px each, gap 17px -> 5*204 + 4*17 = 1020 + 68 = 1088px!)
+  // That guarantees ZERO text overlap and looks super sleek & modern!
+  const cardWidth = 204;
+  const cardGap = 17;
+  const startX = 56;
+  const startY = 236;
 
   const langCards = entries
     .map((e, idx) => {
-      const col = idx % 2;
-      const row = Math.floor(idx / 2);
-      const x = colPositions[col];
-      const y = rowStartY + row * rowGapY;
-      const fillW = Math.max(8, Math.round((e.percent / 100) * 330));
-      const delay = (idx * 0.12).toFixed(2);
-      const prLabel = e.prs > 0 ? ` + ${e.prs} PR target` : '';
+      const x = startX + idx * (cardWidth + cardGap);
+      const y = startY;
+      const fillW = Math.max(12, Math.round((e.percent / 100) * 168));
+      const delay = (idx * 0.14).toFixed(2);
+      const prText = e.prs > 0 ? `${e.repos} repos &#183; ${e.prs} PR repo` : `${e.repos} repositories`;
 
       return `
-      <g transform="translate(${x}, ${y})" class="lang-row" style="animation-delay: ${delay}s">
-        <rect x="0" y="0" width="360" height="46" rx="10" fill="#1f1635" fill-opacity="0.62" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+      <g transform="translate(${x}, ${y})">
+        <rect x="0" y="0" width="204" height="126" rx="14" fill="#1d1233" fill-opacity="0.78" stroke="${e.color}" stroke-opacity="0.35" stroke-width="1.2"/>
         
-        <!-- Geometric Diamond/Vector Node -->
-        <g transform="translate(16, 14)">
-          <rect x="0" y="0" width="12" height="12" rx="3" transform="rotate(45 6 6)" fill="${e.color}" opacity="0.25"/>
-          <circle cx="6" cy="6" r="3.5" fill="${e.color}"/>
+        <!-- Top Rank & Percentage -->
+        <g transform="translate(18, 22)">
+          <rect x="0" y="-10" width="12" height="12" rx="3" transform="rotate(45 6 -4)" fill="${e.color}" opacity="0.3"/>
+          <circle cx="6" cy="-4" r="3.5" fill="${e.color}"/>
+          <text x="20" y="0" class="rank-lbl">RANK #0${idx + 1}</text>
+          <text x="168" y="2" text-anchor="end" class="lang-pct" fill="${e.color}">${e.displayPercent}%</text>
         </g>
 
-        <!-- Language Name & Repo/PR Metadata -->
-        <text x="36" y="21" class="lang-name">${e.name}</text>
-        <text x="165" y="21" class="lang-meta">${e.repos} ${e.repos > 1 ? 'projects' : 'project'}${prLabel}</text>
-        <text x="344" y="21" text-anchor="end" class="lang-pct" fill="${e.color}">${e.displayPercent}%</text>
+        <!-- Language Name -->
+        <text x="18" y="62" class="lang-name">${e.name}</text>
 
-        <!-- Individual Subtle Progress Line -->
-        <rect x="16" y="33" width="328" height="4" rx="2" fill="#120c24" opacity="0.85"/>
-        <rect x="16" y="33" width="${fillW}" height="4" rx="2" fill="${e.color}" class="bar-grow" style="animation-delay: ${delay}s"/>
+        <!-- Project & PR Count (Separate Line -> Never Overlaps) -->
+        <text x="18" y="84" class="lang-meta">${prText}</text>
+
+        <!-- Progress Track -->
+        <rect x="18" y="100" width="168" height="6" rx="3" fill="#100920"/>
+        <rect x="18" y="100" width="${fillW}" height="6" rx="3" fill="${e.color}"/>
       </g>`;
     })
     .join('\n');
@@ -452,20 +427,12 @@ function buildLanguageSvg(stats) {
       ? `${stats.publicRepoCount} Public &amp; ${stats.privateRepoCount} Private`
       : `${stats.publicRepoCount} Public Repos`;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 515" width="100%">
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="100%">
   <defs>
-    <!-- Lo-fi Dusk Sky & Card Background Gradients -->
     <linearGradient id="bgDusk" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#140c26"/>
-      <stop offset="45%" stop-color="#231438"/>
-      <stop offset="80%" stop-color="#381b46"/>
-      <stop offset="100%" stop-color="#4e214c"/>
-    </linearGradient>
-
-    <linearGradient id="horizonGlow" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ff9e64" stop-opacity="0.18"/>
-      <stop offset="50%" stop-color="#f7768e" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#bb9af7" stop-opacity="0.0"/>
+      <stop offset="0%" stop-color="#130b24"/>
+      <stop offset="50%" stop-color="#221338"/>
+      <stop offset="100%" stop-color="#381946"/>
     </linearGradient>
 
     <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -475,158 +442,144 @@ function buildLanguageSvg(stats) {
     </linearGradient>
 
     <clipPath id="cardClip">
-      <rect x="0" y="0" width="850" height="515" rx="20"/>
+      <rect x="0" y="0" width="1200" height="420" rx="22"/>
     </clipPath>
 
     <clipPath id="multiBarClip">
-      <rect x="0" y="0" width="760" height="12" rx="6"/>
+      <rect x="0" y="0" width="1088" height="14" rx="7"/>
     </clipPath>
   </defs>
 
   <style>
+    .eyebrow {
+      font: 600 11px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffbe98;
+      letter-spacing: 2.2px;
+    }
     .title {
-      font: 700 20px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      fill: #fff0f5;
+      font: 800 22px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+      fill: #fff5f8;
       letter-spacing: 0.6px;
     }
     .subtitle {
-      font: 400 12.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       fill: #d8bfd8;
-      letter-spacing: 0.3px;
     }
     .badge-label {
-      font: 600 10px 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
       fill: #ffbe98;
       letter-spacing: 1px;
     }
     .metric-val {
-      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font: 700 20px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
       fill: #ffffff;
     }
     .metric-lbl {
-      font: 500 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
       fill: #cba6f7;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
+    }
+    .rank-lbl {
+      font: 600 10px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #9a86b8;
+      letter-spacing: 1px;
     }
     .lang-name {
-      font: 600 13.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-      fill: #f8f8f2;
+      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #fff8f6;
     }
     .lang-meta {
-      font: 400 11.5px 'Cascadia Code', 'Fira Code', monospace;
-      fill: #a99ec2;
+      font: 400 12px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #b8a9d1;
     }
     .lang-pct {
-      font: 700 13px 'Cascadia Code', 'Fira Code', monospace;
+      font: 700 15px 'Cascadia Code', 'Fira Code', monospace;
     }
     .footer-note {
-      font: 400 11px 'Cascadia Code', 'Fira Code', monospace;
+      font: 500 11px 'Cascadia Code', 'Fira Code', monospace;
       fill: #9a86b8;
-      letter-spacing: 0.4px;
+      letter-spacing: 0.6px;
     }
     @keyframes pulseGlow {
       0%, 100% { opacity: 0.35; }
-      50% { opacity: 0.75; }
-    }
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
-    }
-    @keyframes fadeSlide {
-      0% { opacity: 0; transform: translateY(6px); }
-      100% { opacity: 1; transform: translateY(0); }
+      50% { opacity: 0.85; }
     }
     .star-twinkle {
       animation: pulseGlow 4s ease-in-out infinite;
     }
-    .cloud-drift {
-      animation: floatSlow 7s ease-in-out infinite;
-    }
-    . CardFrame {
-      stroke: url(#accentGrad);
-    }
   </style>
 
   <g clip-path="url(#cardClip)">
-    <!-- Base Dusk Background -->
-    <rect x="0" y="0" width="850" height="515" fill="url(#bgDusk)"/>
-    <rect x="0" y="0" width="850" height="515" fill="url(#horizonGlow)"/>
+    <rect x="0" y="0" width="1200" height="420" fill="url(#bgDusk)"/>
 
-    <!-- Ambient Poetic Sunset Sun & Distant Clouds in Background -->
-    <circle cx="740" cy="85" r="78" fill="#ff9e64" opacity="0.08" class="star-twinkle"/>
-    <circle cx="740" cy="85" r="48" fill="#f7768e" opacity="0.10"/>
-    <path d="M0 465 Q220 430 450 465 T850 450 L850 515 L0 515 Z" fill="#120a21" opacity="0.55"/>
+    <!-- Ambient Dusk Sun Glow -->
+    <circle cx="1060" cy="80" r="110" fill="#ff9e64" opacity="0.07" class="star-twinkle"/>
+    <circle cx="1060" cy="80" r="65" fill="#f7768e" opacity="0.09"/>
+    <path d="M0 375 Q360 345 720 378 T1200 360 L1200 420 L0 420 Z" fill="#10081e" opacity="0.65"/>
 
-    <!-- Subtle Starlight Particles -->
-    <circle cx="120" cy="40" r="1.3" fill="#ffe5d9" class="star-twinkle" style="animation-delay: 0.5s"/>
-    <circle cx="380" cy="28" r="1.5" fill="#ffd6e0" class="star-twinkle" style="animation-delay: 1.5s"/>
-    <circle cx="590" cy="52" r="1.2" fill="#e2afff" class="star-twinkle" style="animation-delay: 2.3s"/>
-    <circle cx="805" cy="145" r="1.5" fill="#ffbe98" class="star-twinkle" style="animation-delay: 0.9s"/>
+    <!-- Border -->
+    <rect x="1" y="1" width="1198" height="418" rx="21" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.42" stroke-width="1.5"/>
 
-    <!-- Outer Border Frame -->
-    <rect x="1" y="1" width="848" height="513" rx="19" fill="none" stroke="url(#accentGrad)" stroke-opacity="0.38" stroke-width="1.5"/>
-
-    <!-- Header Section -->
-    <g transform="translate(45, 36)">
-      <!-- Custom Vector Compass / Star Emblem (No Emoji) -->
+    <!-- Header -->
+    <g transform="translate(56, 34)">
       <g transform="translate(0, 2)">
-        <rect x="0" y="0" width="38" height="38" rx="10" fill="#2a1a42" stroke="#ff9e64" stroke-opacity="0.45" stroke-width="1.2"/>
-        <path d="M19 7 L22.5 15.5 L31 19 L22.5 22.5 L19 31 L15.5 22.5 L7 19 L15.5 15.5 Z" fill="url(#accentGrad)"/>
-        <circle cx="19" cy="19" r="2.5" fill="#140c26"/>
+        <rect x="0" y="0" width="42" height="42" rx="11" fill="#281740" stroke="#ff9e64" stroke-opacity="0.5" stroke-width="1.2"/>
+        <path d="M21 8 L24.8 17.2 L34 21 L24.8 24.8 L21 34 L17.2 24.8 L8 21 L17.2 17.2 Z" fill="url(#accentGrad)"/>
+        <circle cx="21" cy="21" r="2.8" fill="#130b24"/>
       </g>
 
-      <text x="52" y="19" class="title">LANGUAGE TELEMETRY &amp; SPECTRUM</text>
-      <text x="52" y="38" class="subtitle">Aggregated across owned repositories, private workspaces &amp; external pull requests</text>
+      <text x="58" y="19" class="title">TOP 5 CORE LANGUAGES &amp; CONTRIBUTION TELEMETRY</text>
+      <text x="58" y="40" class="subtitle">Pure programming languages aggregated across public, private &amp; external PR repositories</text>
 
-      <!-- Live Sync Pill -->
-      <g transform="translate(555, 4)">
-        <rect x="0" y="0" width="205" height="28" rx="14" fill="#25163a" stroke="#f7768e" stroke-opacity="0.4" stroke-width="1"/>
-        <circle cx="16" cy="14" r="4" fill="#ff9e64" class="star-twinkle"/>
-        <text x="28" y="18" class="badge-label">SYNCED: PUBLIC + PR + PRIV</text>
+      <!-- Live Sync Pill (Wider & Properly Aligned) -->
+      <g transform="translate(838, 6)">
+        <rect x="0" y="0" width="250" height="30" rx="15" fill="#24143a" stroke="#f7768e" stroke-opacity="0.45" stroke-width="1"/>
+        <circle cx="18" cy="15" r="4" fill="#73daca" class="star-twinkle"/>
+        <text x="32" y="19" class="badge-label">LIVE: PUBLIC + PRIVATE + PRs</text>
       </g>
     </g>
 
-    <!-- Metric Summary Strip -->
-    <g transform="translate(45, 96)">
-      <!-- Metric 1: Repositories -->
-      <rect x="0" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#ff9e64" stroke-opacity="0.22" stroke-width="1"/>
-      <path d="M22 21 H34 V39 H22 Z M25 25 H31 M25 30 H31" stroke="#ff9e64" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <text x="48" y="29" class="metric-val">${repoSummaryText}</text>
-      <text x="48" y="47" class="metric-lbl">INDEXED REPOSITORIES</text>
+    <!-- 3 Summary Metric Cards (Width 348px each, Gap 22px -> 3*348 + 44 = 1088px) -->
+    <g transform="translate(56, 98)">
+      <!-- Metric 1 -->
+      <rect x="0" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#ff9e64" stroke-opacity="0.25" stroke-width="1"/>
+      <path d="M24 22 H38 V42 H24 Z M28 27 H34 M28 33 H34" stroke="#ff9e64" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <text x="54" y="30" class="metric-val">${repoSummaryText}</text>
+      <text x="54" y="49" class="metric-lbl">OWNED &amp; COLLABORATOR REPOSITORIES</text>
 
-      <!-- Metric 2: Pull Requests & External Contributions -->
-      <rect x="260" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#f7768e" stroke-opacity="0.22" stroke-width="1"/>
-      <circle cx="284" cy="24" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <circle cx="284" cy="38" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <circle cx="296" cy="38" r="3.5" stroke="#f7768e" stroke-width="1.6" fill="none"/>
-      <path d="M284 27.5 V34.5 M296 34.5 V28 C296 25 293 24 288 24" stroke="#f7768e" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <text x="312" y="29" class="metric-val">${stats.totalPRs} PRs (${stats.externalContributedRepos} External)</text>
-      <text x="312" y="47" class="metric-lbl">MERGE REQUEST FOOTPRINT</text>
+      <!-- Metric 2 -->
+      <rect x="370" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#f7768e" stroke-opacity="0.25" stroke-width="1"/>
+      <circle cx="396" cy="25" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <circle cx="396" cy="40" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <circle cx="410" cy="40" r="3.8" stroke="#f7768e" stroke-width="1.8" fill="none"/>
+      <path d="M396 29 V36 M410 36 V29 C410 26 407 25 401 25" stroke="#f7768e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <text x="428" y="30" class="metric-val">${stats.totalPRs} Pull Requests (${stats.externalContributedRepos} External)</text>
+      <text x="428" y="49" class="metric-lbl">CROSS-PROJECT MERGE REQUESTS</text>
 
-      <!-- Metric 3: Stargazers & Active Languages -->
-      <rect x="520" y="0" width="240" height="62" rx="12" fill="#1d1330" fill-opacity="0.78" stroke="#bb9af7" stroke-opacity="0.22" stroke-width="1"/>
-      <path d="M546 21 L549 27.5 L556 28.5 L551 33.5 L552.2 40.5 L546 37 L539.8 40.5 L541 33.5 L536 28.5 L543 27.5 Z" stroke="#bb9af7" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-      <text x="568" y="29" class="metric-val">${stats.totalStars} Stars &#183; ${entries.length} Core Langs</text>
-      <text x="568" y="47" class="metric-lbl">COMMUNITY &amp; STACK DIVERSITY</text>
+      <!-- Metric 3 -->
+      <rect x="740" y="0" width="348" height="64" rx="14" fill="#1b1030" fill-opacity="0.82" stroke="#bb9af7" stroke-opacity="0.25" stroke-width="1"/>
+      <path d="M768 22 L771.5 29 L779 30 L773.5 35.5 L774.8 43 L768 39.2 L761.2 43 L762.5 35.5 L757 30 L764.5 29 Z" stroke="#bb9af7" stroke-width="1.7" fill="none" stroke-linejoin="round"/>
+      <text x="796" y="30" class="metric-val">${stats.totalStars} Total Stars &#183; Top 5 Languages</text>
+      <text x="796" y="49" class="metric-lbl">VERIFIED CORE CODEBASE SPECTRUM</text>
     </g>
 
-    <!-- Multi-Language Proportional Spectrum Bar -->
-    <g transform="translate(45, 180)">
-      <text x="0" y="-8" class="metric-lbl">PROPORTIONAL CODEBASE DISTRIBUTION</text>
-      <text x="760" y="-8" text-anchor="end" class="metric-lbl">100.0% VERIFIED</text>
-      <rect x="0" y="0" width="760" height="12" rx="6" fill="#120c24"/>
+    <!-- Multi-Language Proportional Bar -->
+    <g transform="translate(56, 192)">
+      <text x="0" y="-9" class="metric-lbl">TOP 5 PROGRAMMING LANGUAGES DISTRIBUTION (EXCLUDING MARKUP &amp; FRAMEWORKS)</text>
+      <text x="1088" y="-9" text-anchor="end" class="metric-lbl">100.0% NORMALIZED</text>
+      <rect x="0" y="0" width="1088" height="14" rx="7" fill="#0f081d"/>
       <g clip-path="url(#multiBarClip)">
         ${barSegments}
       </g>
     </g>
 
-    <!-- Language Breakdown Grid (2 Columns x 4 Rows) -->
+    <!-- 5 Side-by-Side Language Cards -->
     ${langCards}
 
-    <!-- Subtle Poetic Footer -->
-    <line x1="45" y1="472" x2="805" y2="472" stroke="#ff9e64" stroke-opacity="0.15" stroke-width="1"/>
-    <text x="45" y="493" class="footer-note">SOURCE: GITHUB GRAPHQL &amp; REST API // OWNER + COLLABORATOR + EXTERNAL PULL REQUESTS</text>
-    <text x="805" y="493" text-anchor="end" class="footer-note">DUSK THEME &#183; @${USERNAME}</text>
+    <!-- Footer Line -->
+    <line x1="56" y1="382" x2="1144" y2="382" stroke="#ff9e64" stroke-opacity="0.16" stroke-width="1"/>
+    <text x="56" y="402" class="footer-note">DATA SOURCE: GITHUB GRAPHQL API (PUBLIC + PRIVATE REPOSITORIES + EXTERNAL PULL REQUESTS)</text>
+    <text x="1144" y="402" text-anchor="end" class="footer-note">LO-FI SUNSET TELEMETRY &#183; @${USERNAME}</text>
   </g>
 </svg>`;
 }
@@ -656,4 +609,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-

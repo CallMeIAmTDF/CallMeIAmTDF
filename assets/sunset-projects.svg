@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 475" width="100%">
+  <defs>
+    <linearGradient id="bgProjects" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#130b24"/>
+      <stop offset="50%" stop-color="#221338"/>
+      <stop offset="100%" stop-color="#381946"/>
+    </linearGradient>
+
+    <linearGradient id="accentBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff9e64"/>
+      <stop offset="50%" stop-color="#f7768e"/>
+      <stop offset="100%" stop-color="#bb9af7"/>
+    </linearGradient>
+
+    <linearGradient id="projSurface" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d1132" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#29153f" stop-opacity="0.72"/>
+    </linearGradient>
+
+    <clipPath id="projClip">
+      <rect x="0" y="0" width="1200" height="475" rx="22"/>
+    </clipPath>
+  </defs>
+
+  <style>
+    .title {
+      font: 800 22px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+      fill: #fff5f8;
+      letter-spacing: 0.6px;
+    }
+    .subtitle {
+      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      fill: #d8bfd8;
+    }
+    .proj-num {
+      font: 700 11px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffbe98;
+      letter-spacing: 1.4px;
+    }
+    .proj-title {
+      font: 700 18px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #fff8f6;
+    }
+    .proj-desc {
+      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #d8bfd8;
+    }
+    .repo-chip {
+      font: 500 11px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffbe98;
+    }
+    .tag-text {
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #f8f8f2;
+    }
+    @keyframes floatGlow {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.85; }
+    }
+    .glow { animation: floatGlow 4.5s ease-in-out infinite; }
+  </style>
+
+  <g clip-path="url(#projClip)">
+    <rect x="0" y="0" width="1200" height="475" fill="url(#bgProjects)"/>
+
+    <!-- Ambient Glow Orbs -->
+    <circle cx="980" cy="390" r="120" fill="#ff9e64" opacity="0.06" class="glow"/>
+    <circle cx="220" cy="95" r="100" fill="#bb9af7" opacity="0.06" class="glow"/>
+
+    <!-- Border -->
+    <rect x="1" y="1" width="1198" height="473" rx="21" fill="none" stroke="url(#accentBorder)" stroke-opacity="0.42" stroke-width="1.5"/>
+
+    <!-- Header -->
+    <g transform="translate(56, 34)">
+      <g transform="translate(0, 2)">
+        <rect x="0" y="0" width="42" height="42" rx="11" fill="#281740" stroke="#ff9e64" stroke-opacity="0.5" stroke-width="1.2"/>
+        <path d="M12 16 L21 10 L30 16 V26 L21 32 L12 26 Z" fill="none" stroke="url(#accentBorder)" stroke-width="2"/>
+        <circle cx="21" cy="21" r="3" fill="#f7768e"/>
+      </g>
+      <text x="58" y="19" class="title">SELECTED WORKS &amp; ENGINEERING HIGHLIGHTS</text>
+      <text x="58" y="40" class="subtitle">Featured multi-service architectures, full-stack platforms &amp; cloud-native implementations</text>
+    </g>
+
+    <!-- 2x2 PROJECT GRID (Each card: width 532px, height 162px, gapX 24px, gapY 22px) -->
+
+    <!-- PROJECT 01: HocCode Ecosystem -->
+    <g transform="translate(56, 98)">
+      <rect x="0" y="0" width="532" height="162" rx="16" fill="url(#projSurface)" stroke="#ff9e64" stroke-opacity="0.38" stroke-width="1.2"/>
+      <g transform="translate(24, 24)">
+        <circle cx="6" cy="-4" r="4" fill="#ff9e64"/>
+        <text x="18" y="0" class="proj-num">FEATURED SYSTEM // 01</text>
+        <text x="484" y="0" text-anchor="end" class="repo-chip">4 MICRO-REPOS</text>
+
+        <text x="0" y="28" class="proj-title">HocCode &#8212; Interactive Coding &amp; AI Judge Platform</text>
+        <text x="0" y="52" class="proj-desc">Distributed code-learning ecosystem combining a Java core service,</text>
+        <text x="0" y="70" class="proj-desc">isolated Go execution sandbox, Python AI tutor &amp; TypeScript frontend.</text>
+
+        <!-- Sub-repo & Tech Pills -->
+        <g transform="translate(0, 92)">
+          <rect x="0" y="0" width="112" height="24" rx="6" fill="#150b26" stroke="#ff9e64" stroke-opacity="0.5"/>
+          <text x="56" y="16" text-anchor="middle" class="tag-text">hoccode-main</text>
+
+          <rect x="120" y="0" width="122" height="24" rx="6" fill="#150b26" stroke="#7dcfff" stroke-opacity="0.5"/>
+          <text x="181" y="16" text-anchor="middle" class="tag-text">Go-Code-Runner</text>
+
+          <rect x="250" y="0" width="88" height="24" rx="6" fill="#150b26" stroke="#e0af68" stroke-opacity="0.5"/>
+          <text x="294" y="16" text-anchor="middle" class="tag-text">AIServer</text>
+
+          <rect x="346" y="0" width="102" height="24" rx="6" fill="#150b26" stroke="#7aa2f7" stroke-opacity="0.5"/>
+          <text x="397" y="16" text-anchor="middle" class="tag-text">hoccode (FE)</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- PROJECT 02: FamilyTree Ecosystem -->
+    <g transform="translate(612, 98)">
+      <rect x="0" y="0" width="532" height="162" rx="16" fill="url(#projSurface)" stroke="#73daca" stroke-opacity="0.38" stroke-width="1.2"/>
+      <g transform="translate(24, 24)">
+        <circle cx="6" cy="-4" r="4" fill="#73daca"/>
+        <text x="18" y="0" class="proj-num" style="fill: #73daca;">FEATURED SYSTEM // 02</text>
+        <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #73daca;">Backend_FT</text>
+
+        <text x="0" y="28" class="proj-title">FamilyTree Ecosystem</text>
+        <text x="0" y="52" class="proj-desc">Full-stack genealogy and relationship graph platform engineered with</text>
+        <text x="0" y="70" class="proj-desc">a modular Java Spring Boot backend and reactive Vue.js client.</text>
+
+        <g transform="translate(0, 92)">
+          <rect x="0" y="0" width="104" height="24" rx="6" fill="#150b26" stroke="#ff9e64" stroke-opacity="0.5"/>
+          <text x="52" y="16" text-anchor="middle" class="tag-text">Spring Boot</text>
+
+          <rect x="112" y="0" width="76" height="24" rx="6" fill="#150b26" stroke="#73daca" stroke-opacity="0.5"/>
+          <text x="150" y="16" text-anchor="middle" class="tag-text">Vue.js</text>
+
+          <rect x="196" y="0" width="144" height="24" rx="6" fill="#150b26" stroke="#bb9af7" stroke-opacity="0.5"/>
+          <text x="268" y="16" text-anchor="middle" class="tag-text">FamilyTree_FE_Final</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- PROJECT 03: Cloud-Native & Security Research -->
+    <g transform="translate(56, 282)">
+      <rect x="0" y="0" width="532" height="162" rx="16" fill="url(#projSurface)" stroke="#bb9af7" stroke-opacity="0.38" stroke-width="1.2"/>
+      <g transform="translate(24, 24)">
+        <circle cx="6" cy="-4" r="4" fill="#bb9af7"/>
+        <text x="18" y="0" class="proj-num" style="fill: #cba6f7;">FEATURED SYSTEM // 03</text>
+        <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #cba6f7;">demo-ocp</text>
+
+        <text x="0" y="28" class="proj-title">Cloud-Native &amp; Security Research</text>
+        <text x="0" y="52" class="proj-desc">Enterprise Red Hat OpenShift (OCP) Spring Boot deployment templates,</text>
+        <text x="0" y="70" class="proj-desc">high-throughput data extraction pipelines, and CTF security writeups.</text>
+
+        <g transform="translate(0, 92)">
+          <rect x="0" y="0" width="114" height="24" rx="6" fill="#150b26" stroke="#f7768e" stroke-opacity="0.5"/>
+          <text x="57" y="16" text-anchor="middle" class="tag-text">OpenShift OCP</text>
+
+          <rect x="122" y="0" width="148" height="24" rx="6" fill="#150b26" stroke="#ff9e64" stroke-opacity="0.5"/>
+          <text x="196" y="16" text-anchor="middle" class="tag-text">springboot-template</text>
+
+          <rect x="278" y="0" width="102" height="24" rx="6" fill="#150b26" stroke="#bb9af7" stroke-opacity="0.5"/>
+          <text x="329" y="16" text-anchor="middle" class="tag-text">WriteupCTF</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- PROJECT 04: Sport Venue Booking Platform -->
+    <g transform="translate(612, 282)">
+      <rect x="0" y="0" width="532" height="162" rx="16" fill="url(#projSurface)" stroke="#f7768e" stroke-opacity="0.38" stroke-width="1.2"/>
+      <g transform="translate(24, 24)">
+        <circle cx="6" cy="-4" r="4" fill="#f7768e"/>
+        <text x="18" y="0" class="proj-num" style="fill: #f7768e;">FEATURED SYSTEM // 04</text>
+        <text x="484" y="0" text-anchor="end" class="repo-chip" style="fill: #f7768e;">booking-app</text>
+
+        <text x="0" y="28" class="proj-title">Sport Venue Booking Platform</text>
+        <text x="0" y="52" class="proj-desc">Full-stack sports facility reservation system featuring Owner Analytics</text>
+        <text x="0" y="70" class="proj-desc">Dashboards, real-time venue scheduling &amp; cross-repo PR workflows.</text>
+
+        <g transform="translate(0, 92)">
+          <rect x="0" y="0" width="96" height="24" rx="6" fill="#150b26" stroke="#f7768e" stroke-opacity="0.5"/>
+          <text x="48" y="16" text-anchor="middle" class="tag-text">Laravel PHP</text>
+
+          <rect x="104" y="0" width="102" height="24" rx="6" fill="#150b26" stroke="#7aa2f7" stroke-opacity="0.5"/>
+          <text x="155" y="16" text-anchor="middle" class="tag-text">TypeScript</text>
+
+          <rect x="214" y="0" width="126" height="24" rx="6" fill="#150b26" stroke="#ffbe98" stroke-opacity="0.5"/>
+          <text x="277" y="16" text-anchor="middle" class="tag-text">Booking-app-FE</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

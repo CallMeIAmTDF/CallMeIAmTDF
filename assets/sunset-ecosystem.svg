@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="100%">
+  <defs>
+    <linearGradient id="bgEco" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#130b24"/>
+      <stop offset="50%" stop-color="#211236"/>
+      <stop offset="100%" stop-color="#351844"/>
+    </linearGradient>
+
+    <linearGradient id="accentBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff9e64"/>
+      <stop offset="50%" stop-color="#f7768e"/>
+      <stop offset="100%" stop-color="#bb9af7"/>
+    </linearGradient>
+
+    <linearGradient id="cardSurface" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d1132" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#2a1642" stop-opacity="0.68"/>
+    </linearGradient>
+
+    <clipPath id="ecoClip">
+      <rect x="0" y="0" width="1200" height="500" rx="22"/>
+    </clipPath>
+  </defs>
+
+  <style>
+    .title {
+      font: 800 22px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+      fill: #fff5f8;
+      letter-spacing: 0.6px;
+    }
+    .subtitle {
+      font: 400 13px 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      fill: #d8bfd8;
+    }
+    .code-key {
+      font: 600 13px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ff9e64;
+    }
+    .code-val {
+      font: 400 13px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #f3d5e5;
+    }
+    .code-comment {
+      font: italic 400 12px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #8975a8;
+    }
+    .domain-title {
+      font: 700 15px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #fff8f6;
+      letter-spacing: 0.4px;
+    }
+    .domain-sub {
+      font: 400 11.5px 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      fill: #b8a9d1;
+    }
+    .chip-text {
+      font: 600 11.5px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffe8d6;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 0.95; }
+    }
+    .pulse { animation: pulseDot 3.8s ease-in-out infinite; }
+  </style>
+
+  <g clip-path="url(#ecoClip)">
+    <!-- Unified Dusk Background -->
+    <rect x="0" y="0" width="1200" height="500" fill="url(#bgEco)"/>
+
+    <!-- Ambient Glow -->
+    <circle cx="150" cy="420" r="130" fill="#f7768e" opacity="0.06" class="pulse"/>
+    <circle cx="1050" cy="110" r="110" fill="#bb9af7" opacity="0.07" class="pulse"/>
+
+    <!-- Outer Border -->
+    <rect x="1" y="1" width="1198" height="498" rx="21" fill="none" stroke="url(#accentBorder)" stroke-opacity="0.42" stroke-width="1.5"/>
+
+    <!-- Section Header -->
+    <g transform="translate(56, 34)">
+      <g transform="translate(0, 2)">
+        <rect x="0" y="0" width="42" height="42" rx="11" fill="#281740" stroke="#ff9e64" stroke-opacity="0.5" stroke-width="1.2"/>
+        <polygon points="21,9 32,15 32,27 21,33 10,27 10,15" fill="none" stroke="url(#accentBorder)" stroke-width="2"/>
+        <circle cx="21" cy="21" r="3.5" fill="#ff9e64"/>
+      </g>
+      <text x="58" y="19" class="title">ARCHITECTURAL OVERVIEW &amp; TECHNICAL ECOSYSTEM</text>
+      <text x="58" y="40" class="subtitle">System design philosophy, core engineering domains &amp; production toolchains</text>
+    </g>
+
+    <!-- LEFT PANEL: Terminal / YAML Developer Profile (Width: 440px) -->
+    <g transform="translate(56, 98)">
+      <rect x="0" y="0" width="440" height="364" rx="16" fill="url(#cardSurface)" stroke="#ff9e64" stroke-opacity="0.28" stroke-width="1.2"/>
+      
+      <!-- Window Header Bar -->
+      <rect x="0" y="0" width="440" height="36" rx="16" fill="#160c28"/>
+      <circle cx="22" cy="18" r="5" fill="#f7768e"/>
+      <circle cx="38" cy="18" r="5" fill="#e0af68"/>
+      <circle cx="54" cy="18" r="5" fill="#73daca"/>
+      <text x="220" y="22" text-anchor="middle" class="code-comment" style="font-style: normal; fill: #cba6f7;">profile.yaml &#8212; @CallMeIAmTDF</text>
+
+      <!-- YAML Content -->
+      <g transform="translate(24, 64)">
+        <text x="0" y="0" class="code-comment"># Identity &amp; Engineering Focus</text>
+        
+        <text x="0" y="28" class="code-key">developer:</text>
+        <text x="16" y="52" class="code-key">name:</text>
+        <text x="72" y="52" class="code-val">"Dang Xuan Thai"</text>
+
+        <text x="16" y="76" class="code-key">handle:</text>
+        <text x="86" y="76" class="code-val">"@CallMeIAmTDF"</text>
+
+        <text x="16" y="100" class="code-key">role:</text>
+        <text x="72" y="100" class="code-val">"Full-Stack &amp; AI Systems Engineer"</text>
+
+        <text x="0" y="134" class="code-key">architecture_pillars:</text>
+        <text x="16" y="158" class="code-val">- "Distributed Backend &amp; Code Sandboxes"</text>
+        <text x="16" y="182" class="code-val">- "Reactive Web &amp; Modern UI Engineering"</text>
+        <text x="16" y="206" class="code-val">- "Applied AI, LLM Agents &amp; RAG Pipelines"</text>
+        <text x="16" y="230" class="code-val">- "Cloud-Native OpenShift &amp; Containers"</text>
+
+        <text x="0" y="264" class="code-key">philosophy:</text>
+        <text x="16" y="286" class="code-val" style="fill: #ffbe98;">"Clean abstractions &amp; observable systems."</text>
+      </g>
+    </g>
+
+    <!-- RIGHT PANEL: 2x2 Domain Architecture Grid (Width: 624px, x=520) -->
+    <!-- Card 1: Backend & Distributed Systems -->
+    <g transform="translate(520, 98)">
+      <rect x="0" y="0" width="302" height="172" rx="16" fill="url(#cardSurface)" stroke="#ff9e64" stroke-opacity="0.3" stroke-width="1.2"/>
+      <g transform="translate(20, 24)">
+        <!-- Vector Server Stack Icon -->
+        <rect x="0" y="0" width="28" height="28" rx="7" fill="#2b1742" stroke="#ff9e64" stroke-width="1.2"/>
+        <path d="M7 10 H21 M7 14 H21 M7 18 H15" stroke="#ff9e64" stroke-width="1.8" stroke-linecap="round"/>
+        <text x="38" y="14" class="domain-title">Backend &amp; Systems</text>
+        <text x="38" y="30" class="domain-sub">Microservices, Sandboxes &amp; APIs</text>
+
+        <!-- Tech Pills Row 1 -->
+        <g transform="translate(0, 52)">
+          <rect x="0" y="0" width="64" height="26" rx="6" fill="#160c28" stroke="#ff9e64" stroke-opacity="0.45"/>
+          <text x="32" y="17" text-anchor="middle" class="chip-text">Java</text>
+
+          <rect x="72" y="0" width="104" height="26" rx="6" fill="#160c28" stroke="#73daca" stroke-opacity="0.45"/>
+          <text x="124" y="17" text-anchor="middle" class="chip-text">Spring Boot</text>
+
+          <rect x="184" y="0" width="76" height="26" rx="6" fill="#160c28" stroke="#7dcfff" stroke-opacity="0.45"/>
+          <text x="222" y="17" text-anchor="middle" class="chip-text">Golang</text>
+        </g>
+
+        <!-- Tech Pills Row 2 -->
+        <g transform="translate(0, 86)">
+          <rect x="0" y="0" width="76" height="26" rx="6" fill="#160c28" stroke="#e0af68" stroke-opacity="0.45"/>
+          <text x="38" y="17" text-anchor="middle" class="chip-text">Python</text>
+
+          <rect x="84" y="0" width="82" height="26" rx="6" fill="#160c28" stroke="#73daca" stroke-opacity="0.45"/>
+          <text x="125" y="17" text-anchor="middle" class="chip-text">FastAPI</text>
+
+          <rect x="174" y="0" width="86" height="26" rx="6" fill="#160c28" stroke="#f7768e" stroke-opacity="0.45"/>
+          <text x="217" y="17" text-anchor="middle" class="chip-text">Laravel</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Card 2: Frontend & Interactive Web -->
+    <g transform="translate(842, 98)">
+      <rect x="0" y="0" width="302" height="172" rx="16" fill="url(#cardSurface)" stroke="#7aa2f7" stroke-opacity="0.3" stroke-width="1.2"/>
+      <g transform="translate(20, 24)">
+        <!-- Vector Layout Icon -->
+        <rect x="0" y="0" width="28" height="28" rx="7" fill="#2b1742" stroke="#7aa2f7" stroke-width="1.2"/>
+        <rect x="6" y="7" width="16" height="14" rx="2" stroke="#7aa2f7" stroke-width="1.6" fill="none"/>
+        <line x1="6" y1="12" x2="22" y2="12" stroke="#7aa2f7" stroke-width="1.4"/>
+        <text x="38" y="14" class="domain-title">Frontend &amp; Web</text>
+        <text x="38" y="30" class="domain-sub">SSR/SPA, State &amp; 3D Motion</text>
+
+        <!-- Tech Pills Row 1 -->
+        <g transform="translate(0, 52)">
+          <rect x="0" y="0" width="96" height="26" rx="6" fill="#160c28" stroke="#7aa2f7" stroke-opacity="0.45"/>
+          <text x="48" y="17" text-anchor="middle" class="chip-text">TypeScript</text>
+
+          <rect x="104" y="0" width="74" height="26" rx="6" fill="#160c28" stroke="#7dcfff" stroke-opacity="0.45"/>
+          <text x="141" y="17" text-anchor="middle" class="chip-text">React</text>
+
+          <rect x="186" y="0" width="76" height="26" rx="6" fill="#160c28" stroke="#bb9af7" stroke-opacity="0.45"/>
+          <text x="224" y="17" text-anchor="middle" class="chip-text">Next.js</text>
+        </g>
+
+        <!-- Tech Pills Row 2 -->
+        <g transform="translate(0, 86)">
+          <rect x="0" y="0" width="74" height="26" rx="6" fill="#160c28" stroke="#73daca" stroke-opacity="0.45"/>
+          <text x="37" y="17" text-anchor="middle" class="chip-text">Vue.js</text>
+
+          <rect x="82" y="0" width="92" height="26" rx="6" fill="#160c28" stroke="#f7768e" stroke-opacity="0.45"/>
+          <text x="128" y="17" text-anchor="middle" class="chip-text">Tailwind</text>
+
+          <rect x="182" y="0" width="80" height="26" rx="6" fill="#160c28" stroke="#ff9e64" stroke-opacity="0.45"/>
+          <text x="222" y="17" text-anchor="middle" class="chip-text">Node.js</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Card 3: Applied AI & Data Engineering -->
+    <g transform="translate(520, 290)">
+      <rect x="0" y="0" width="302" height="172" rx="16" fill="url(#cardSurface)" stroke="#f7768e" stroke-opacity="0.3" stroke-width="1.2"/>
+      <g transform="translate(20, 24)">
+        <!-- Vector Neural Node Icon -->
+        <rect x="0" y="0" width="28" height="28" rx="7" fill="#2b1742" stroke="#f7768e" stroke-width="1.2"/>
+        <circle cx="9" cy="9" r="2.5" fill="#f7768e"/>
+        <circle cx="19" cy="9" r="2.5" fill="#f7768e"/>
+        <circle cx="14" cy="19" r="2.5" fill="#f7768e"/>
+        <path d="M9 9 L14 19 L19 9 Z" stroke="#f7768e" stroke-width="1.3" fill="none"/>
+        <text x="38" y="14" class="domain-title">Applied AI &amp; Data</text>
+        <text x="38" y="30" class="domain-sub">RAG Pipelines, LLMs &amp; Indexing</text>
+
+        <!-- Tech Pills Row 1 -->
+        <g transform="translate(0, 52)">
+          <rect x="0" y="0" width="96" height="26" rx="6" fill="#160c28" stroke="#f7768e" stroke-opacity="0.45"/>
+          <text x="48" y="17" text-anchor="middle" class="chip-text">RAG Server</text>
+
+          <rect x="104" y="0" width="88" height="26" rx="6" fill="#160c28" stroke="#ff9e64" stroke-opacity="0.45"/>
+          <text x="148" y="17" text-anchor="middle" class="chip-text">LangChain</text>
+
+          <rect x="200" y="0" width="62" height="26" rx="6" fill="#160c28" stroke="#e0af68" stroke-opacity="0.45"/>
+          <text x="231" y="17" text-anchor="middle" class="chip-text">LLMs</text>
+        </g>
+
+        <!-- Tech Pills Row 2 -->
+        <g transform="translate(0, 86)">
+          <rect x="0" y="0" width="84" height="26" rx="6" fill="#160c28" stroke="#bb9af7" stroke-opacity="0.45"/>
+          <text x="42" y="17" text-anchor="middle" class="chip-text">PyTorch</text>
+
+          <rect x="92" y="0" width="80" height="26" rx="6" fill="#160c28" stroke="#7aa2f7" stroke-opacity="0.45"/>
+          <text x="132" y="17" text-anchor="middle" class="chip-text">Pandas</text>
+
+          <rect x="180" y="0" width="82" height="26" rx="6" fill="#160c28" stroke="#73daca" stroke-opacity="0.45"/>
+          <text x="221" y="17" text-anchor="middle" class="chip-text">VectorDB</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Card 4: Cloud, DevOps & Databases -->
+    <g transform="translate(842, 290)">
+      <rect x="0" y="0" width="302" height="172" rx="16" fill="url(#cardSurface)" stroke="#bb9af7" stroke-opacity="0.3" stroke-width="1.2"/>
+      <g transform="translate(20, 24)">
+        <!-- Vector Cloud / Container Icon -->
+        <rect x="0" y="0" width="28" height="28" rx="7" fill="#2b1742" stroke="#bb9af7" stroke-width="1.2"/>
+        <path d="M14 7 L21 11 V17 L14 21 L7 17 V11 Z" stroke="#bb9af7" stroke-width="1.5" fill="none"/>
+        <text x="38" y="14" class="domain-title">Cloud, Infra &amp; Data</text>
+        <text x="38" y="30" class="domain-sub">Containers, OCP &amp; Storage</text>
+
+        <!-- Tech Pills Row 1 -->
+        <g transform="translate(0, 52)">
+          <rect x="0" y="0" width="76" height="26" rx="6" fill="#160c28" stroke="#7aa2f7" stroke-opacity="0.45"/>
+          <text x="38" y="17" text-anchor="middle" class="chip-text">Docker</text>
+
+          <rect x="84" y="0" width="92" height="26" rx="6" fill="#160c28" stroke="#f7768e" stroke-opacity="0.45"/>
+          <text x="130" y="17" text-anchor="middle" class="chip-text">OpenShift</text>
+
+          <rect x="184" y="0" width="78" height="26" rx="6" fill="#160c28" stroke="#73daca" stroke-opacity="0.45"/>
+          <text x="223" y="17" text-anchor="middle" class="chip-text">CI / CD</text>
+        </g>
+
+        <!-- Tech Pills Row 2 -->
+        <g transform="translate(0, 86)">
+          <rect x="0" y="0" width="94" height="26" rx="6" fill="#160c28" stroke="#bb9af7" stroke-opacity="0.45"/>
+          <text x="47" y="17" text-anchor="middle" class="chip-text">PostgreSQL</text>
+
+          <rect x="102" y="0" width="78" height="26" rx="6" fill="#160c28" stroke="#ff9e64" stroke-opacity="0.45"/>
+          <text x="141" y="17" text-anchor="middle" class="chip-text">MySQL</text>
+
+          <rect x="188" y="0" width="74" height="26" rx="6" fill="#160c28" stroke="#f7768e" stroke-opacity="0.45"/>
+          <text x="225" y="17" text-anchor="middle" class="chip-text">Redis</text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
