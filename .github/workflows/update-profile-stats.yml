@@ -1,0 +1,51 @@
+name: Update Sunset Profile Telemetry
+
+on:
+  schedule:
+    # Runs every 12 hours to refresh Public + Private + PR language stats
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'scripts/update-stats.js'
+      - '.github/workflows/update-profile-stats.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-telemetry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate Deep Language & PR Telemetry SVG
+        env:
+          GITHUB_USERNAME: ${{ github.repository_owner }}
+          # Use STATS_TOKEN (PAT with repo & read:user scopes) for full Private Repo + External PR aggregation.
+          # Falls back automatically to GITHUB_TOKEN if STATS_TOKEN is not configured yet.
+          GH_TOKEN: ${{ secrets.STATS_TOKEN || secrets.GITHUB_TOKEN }}
+          INCLUDE_FORKS: 'true'
+        run: node scripts/update-stats.js
+
+      - name: Commit & Push updated SVG card
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/languages-sunset.svg
+          if git diff --staged --quiet; then
+            echo "No telemetry changes detected."
+          else
+            git commit -m "chore(telemetry): update multi-source language spectrum [skip ci]"
+            git push
+          fi
+

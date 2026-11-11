@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 130" width="100%">
+  <defs>
+    <linearGradient id="footerSky" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#140c26"/>
+      <stop offset="50%" stop-color="#2b153c"/>
+      <stop offset="100%" stop-color="#140c26"/>
+    </linearGradient>
+    <linearGradient id="waveA" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff9e64" stop-opacity="0.22"/>
+      <stop offset="50%" stop-color="#f7768e" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#bb9af7" stop-opacity="0.22"/>
+    </linearGradient>
+    <linearGradient id="waveB" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#bb9af7" stop-opacity="0.18"/>
+      <stop offset="50%" stop-color="#ff9e64" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#f7768e" stop-opacity="0.18"/>
+    </linearGradient>
+    <clipPath id="footerClip">
+      <rect x="0" y="0" width="1200" height="130" rx="18"/>
+    </clipPath>
+  </defs>
+  <style>
+    .quote {
+      font: italic 400 14px Georgia, 'Times New Roman', serif;
+      fill: #f3d5e5;
+      letter-spacing: 0.5px;
+    }
+    .sig {
+      font: 600 10.5px 'Cascadia Code', 'Fira Code', monospace;
+      fill: #ffbe98;
+      letter-spacing: 2px;
+    }
+    @keyframes waveShift {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(-25px); }
+    }
+    .drift { animation: waveShift 10s ease-in-out infinite; }
+  </style>
+  <g clip-path="url(#footerClip)">
+    <rect x="0" y="0" width="1200" height="130" fill="url(#footerSky)"/>
+    <path class="drift" d="M-40 85 Q260 50 580 85 T1240 80 L1240 130 L-40 130 Z" fill="url(#waveA)"/>
+    <path d="M0 98 Q320 120 640 94 T1200 102 L1200 130 L0 130 Z" fill="url(#waveB)"/>
+    <text x="600" y="46" text-anchor="middle" class="quote">"Every commit is a quiet note left along the horizon."</text>
+    <text x="600" y="72" text-anchor="middle" class="sig">DANG XUAN THAI &#183; @CALLMEIAMTDF &#183; HANDCRAFTED SVG</text>
+    <rect x="1" y="1" width="1198" height="128" rx="17" fill="none" stroke="#ff9e64" stroke-opacity="0.3" stroke-width="1.2"/>
+  </g>
+</svg>
+
